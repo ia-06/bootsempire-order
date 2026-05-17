@@ -831,10 +831,6 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
         display: inline;
       }
 
-      .ticker-content {
-        animation-duration: 10s;
-      }
-
       /* Mobile Speed (100%) */
     }
   </style>
@@ -852,14 +848,16 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
 
   <div class="ticker-wrap">
     <div class="ticker-content">
-      <svg class="ticker-svg" viewBox="0 0 24 24">
+      <svg class="ticker-svg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#f8f7f7"
+        viewBox="0 0 256 256">
         <path
           d="M240,128a15.79,15.79,0,0,1-10.5,15l-63.44,23.07L143,229.5a16,16,0,0,1-30,0L89.94,166.06,26.5,143a16,16,0,0,1,0-30L89.94,89.94,113,26.5a16,16,0,0,1,30,0l23.07,63.44L229.5,113A15.79,15.79,0,0,1,240,128Z">
         </path>
       </svg>
       <span class="ticker-text">WORLDWIDE SHIPPING</span>
 
-      <svg class="ticker-svg" viewBox="0 0 24 24">
+      <svg class="ticker-svg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#f8f7f7"
+        viewBox="0 0 256 256">
         <path
           d="M240,128a15.79,15.79,0,0,1-10.5,15l-63.44,23.07L143,229.5a16,16,0,0,1-30,0L89.94,166.06,26.5,143a16,16,0,0,1,0-30L89.94,89.94,113,26.5a16,16,0,0,1,30,0l23.07,63.44L229.5,113A15.79,15.79,0,0,1,240,128Z">
         </path>
@@ -869,14 +867,16 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
         <span class="text-mobile">TRUSTED BY MORE THAN 10K+ PLAYERS</span>
       </span>
 
-      <svg class="ticker-svg" viewBox="0 0 24 24">
+      <svg class="ticker-svg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#f8f7f7"
+        viewBox="0 0 256 256">
         <path
           d="M240,128a15.79,15.79,0,0,1-10.5,15l-63.44,23.07L143,229.5a16,16,0,0,1-30,0L89.94,166.06,26.5,143a16,16,0,0,1,0-30L89.94,89.94,113,26.5a16,16,0,0,1,30,0l23.07,63.44L229.5,113A15.79,15.79,0,0,1,240,128Z">
         </path>
       </svg>
       <span class="ticker-text">WORLDWIDE SHIPPING</span>
 
-      <svg class="ticker-svg" viewBox="0 0 24 24">
+      <svg class="ticker-svg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#f8f7f7"
+        viewBox="0 0 256 256">
         <path
           d="M240,128a15.79,15.79,0,0,1-10.5,15l-63.44,23.07L143,229.5a16,16,0,0,1-30,0L89.94,166.06,26.5,143a16,16,0,0,1,0-30L89.94,89.94,113,26.5a16,16,0,0,1,30,0l23.07,63.44L229.5,113A15.79,15.79,0,0,1,240,128Z">
         </path>
@@ -888,14 +888,16 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
     </div>
 
     <div class="ticker-content" aria-hidden="true">
-      <svg class="ticker-svg" viewBox="0 0 24 24">
+      <svg class="ticker-svg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#f8f7f7"
+        viewBox="0 0 256 256">
         <path
           d="M240,128a15.79,15.79,0,0,1-10.5,15l-63.44,23.07L143,229.5a16,16,0,0,1-30,0L89.94,166.06,26.5,143a16,16,0,0,1,0-30L89.94,89.94,113,26.5a16,16,0,0,1,30,0l23.07,63.44L229.5,113A15.79,15.79,0,0,1,240,128Z">
         </path>
       </svg>
       <span class="ticker-text">WORLDWIDE SHIPPING</span>
 
-      <svg class="ticker-svg" viewBox="0 0 24 24">
+      <svg class="ticker-svg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#f8f7f7"
+        viewBox="0 0 256 256">
         <path
           d="M240,128a15.79,15.79,0,0,1-10.5,15l-63.44,23.07L143,229.5a16,16,0,0,1-30,0L89.94,166.06,26.5,143a16,16,0,0,1,0-30L89.94,89.94,113,26.5a16,16,0,0,1,30,0l23.07,63.44L229.5,113A15.79,15.79,0,0,1,240,128Z">
         </path>
@@ -905,14 +907,16 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
         <span class="text-mobile">TRUSTED BY MORE THAN 10K+ PLAYERS</span>
       </span>
 
-      <svg class="ticker-svg" viewBox="0 0 24 24">
+      <svg class="ticker-svg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#f8f7f7"
+        viewBox="0 0 256 256">
         <path
           d="M240,128a15.79,15.79,0,0,1-10.5,15l-63.44,23.07L143,229.5a16,16,0,0,1-30,0L89.94,166.06,26.5,143a16,16,0,0,1,0-30L89.94,89.94,113,26.5a16,16,0,0,1,30,0l23.07,63.44L229.5,113A15.79,15.79,0,0,1,240,128Z">
         </path>
       </svg>
       <span class="ticker-text">WORLDWIDE SHIPPING</span>
 
-      <svg class="ticker-svg" viewBox="0 0 24 24">
+      <svg class="ticker-svg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#f8f7f7"
+        viewBox="0 0 256 256">
         <path
           d="M240,128a15.79,15.79,0,0,1-10.5,15l-63.44,23.07L143,229.5a16,16,0,0,1-30,0L89.94,166.06,26.5,143a16,16,0,0,1,0-30L89.94,89.94,113,26.5a16,16,0,0,1,30,0l23.07,63.44L229.5,113A15.79,15.79,0,0,1,240,128Z">
         </path>
