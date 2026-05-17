@@ -1780,14 +1780,14 @@ session_start();
           <div class="settings-card">
             <p class="settings-title">Customer Redirect Links</p>
             <div class="fields">
-              <div class="field-row">
+              <div class="field-row" id="waLinkRow">
                 <label>WhatsApp Link</label>
                 <input class="inp" id="sWaLink" type="url" placeholder="https://wa.me/91XXXXXXXXXX">
                 <small>Customers who came via WhatsApp are sent here after confirming order.</small>
               </div>
-              <div class="field-row">
+              <div class="field-row" id="igLinkRow">
                 <label>Instagram Link</label>
-                <input class="inp" id="sIgLink" type="url" placeholder="https://instagram.com/bootsempire">
+                <input class="inp" id="sIgLink" type="url" placeholder="https://instagram.com/channel_name">
                 <small>Customers who came via Instagram are sent here after confirming order.</small>
               </div>
             </div>
@@ -1844,6 +1844,13 @@ session_start();
       badge.className = 'channel-badge ' + (ch === 'instagram' ? 'ig' : 'wa');
       document.getElementById('switchBtn').style.display = 'inline-flex';
       document.getElementById('ordersSubtitle').textContent = ch.charAt(0).toUpperCase() + ch.slice(1) + ' orders';
+
+      // Isolate Redirect Settings based on channel
+      var waRow = document.getElementById('waLinkRow');
+      var igRow = document.getElementById('igLinkRow');
+      if (waRow) waRow.style.display = (ch === 'whatsapp') ? 'flex' : 'none';
+      if (igRow) igRow.style.display = (ch === 'instagram') ? 'flex' : 'none';
+
       show('screenPanel');
     }
 
@@ -2074,17 +2081,12 @@ session_start();
     // Delegated click handler for all order card interactions
     document.getElementById('ordersList').addEventListener('click', function (e) {
       var btn = e.target.closest('button');
+
       if (btn) {
         e.stopPropagation();
         if (btn.classList.contains('js-confirm')) confirmOrder(btn.dataset.id);
         else if (btn.classList.contains('js-issue')) raiseIssue(btn.dataset.id);
-        else if (btn.classList.contains('js-delete-order')) deleteOrder(btn.dataset.id); // <-- Calls new ID logic
-        return;
-      }
-
-      if (proofImg) {
-        e.stopPropagation();
-        openLightbox(proofImg.src);
+        else if (btn.classList.contains('js-delete-order')) deleteOrder(btn.dataset.id);
         return;
       }
 
