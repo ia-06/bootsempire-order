@@ -2427,10 +2427,6 @@ session_start();
 
       body.innerHTML = configHtml + urlHtml;
 
-      // Footer — info only, no action buttons
-      document.getElementById('odFooter').innerHTML =
-        '<p class="od-footer-placeholder">&#128279; Generated link \u2014 read-only config</p>';
-
       document.getElementById('odBackdrop').classList.add('open');
     }
 
