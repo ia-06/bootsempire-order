@@ -747,6 +747,87 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
     .channel-btn.instagram:hover {
       opacity: 0.92;
     }
+
+    /* Ticker Banner */
+    @font-face {
+      font-family: "Zing Rust Demo Base";
+      src: url("https://framerusercontent.com/assets/k4MlYkPvaCyNSNadZpDgmQScg2w.woff2") format("woff2");
+      font-display: swap;
+      font-style: normal;
+      font-weight: 400;
+    }
+
+    .ticker-wrap {
+      width: 100vw;
+      height: 40px;
+      background-color: #3AA63A;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+    }
+
+    .ticker-content {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+      white-space: nowrap;
+      padding-right: 30px;
+      animation: tickerLoop 30s linear infinite;
+      /* Desktop Speed (25%) */
+    }
+
+    .ticker-text {
+      font-family: "Zing Rust Demo Base", sans-serif;
+      color: #ffffff;
+      font-size: 33px;
+      line-height: 40px;
+      text-transform: uppercase;
+      padding-top: 4px;
+      /* Optical alignment for custom font */
+    }
+
+    .ticker-svg {
+      width: 20px;
+      height: 20px;
+      fill: #ffffff;
+      flex-shrink: 0;
+    }
+
+    .text-desktop {
+      display: inline;
+    }
+
+    .text-mobile {
+      display: none;
+    }
+
+    @keyframes tickerLoop {
+      0% {
+        transform: translateX(0);
+      }
+
+      100% {
+        transform: translateX(-50%);
+      }
+
+      /* Translates exactly half the duplicated content */
+    }
+
+    @media (max-width: 768px) {
+      .text-desktop {
+        display: none;
+      }
+
+      .text-mobile {
+        display: inline;
+      }
+
+      .ticker-content {
+        animation-duration: 10s;
+      }
+
+      /* Mobile Speed (100%) */
+    }
   </style>
 </head>
 
@@ -760,147 +841,176 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
     </div>
   </header>
 
+  <div class="ticker-wrap">
+    <div class="ticker-content">
+      <svg class="ticker-svg" viewBox="0 0 24 24">
+        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+      </svg>
+      <span class="ticker-text">WORLDWIDE SHIPPING</span>
+      <svg class="ticker-svg" viewBox="0 0 24 24">
+        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+      </svg>
+      <span class="ticker-text">
+        <span class="text-desktop">TRUSTED BY MORE THAN 10,000 PLAYERS</span>
+        <span class="text-mobile">TRUSTED BY MORE THAN 10K+ PLAYERS</span>
+      </span>
+
+      <svg class="ticker-svg" viewBox="0 0 24 24">
+        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+      </svg>
+      <span class="ticker-text">WORLDWIDE SHIPPING</span>
+      <svg class="ticker-svg" viewBox="0 0 24 24">
+        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+      </svg>
+      <span class="ticker-text">
+        <span class="text-desktop">TRUSTED BY MORE THAN 10,000 PLAYERS</span>
+        <span class="text-mobile">TRUSTED BY MORE THAN 10K+ PLAYERS</span>
+      </span>
+    </div>
+  </div>
+
   <main class="main" id="mainWrap">
 
-    <div id="formContent" style="display:flex; flex-direction:column; gap:28px;"></div>
+    <div id="formContent" style="display:flex; flex-direction:column; gap:28px;">
 
-    <!-- Page header -->
-    <div id="pageHeader">
-      <h1 class="page-title">Your Order</h1>
-      <p class="page-sub">Fill in your details and pay to confirm your order.</p>
-    </div>
-
-    <!-- Validity badge -->
-    <div>
-      <div class="validity-badge">
-        Order valid for <?= $qty ?> Boot<?= $qty > 1 ? 's' : '' ?>
+      <!-- Page header -->
+      <div id="pageHeader">
+        <h1 class="page-title">Your Order</h1>
+        <p class="page-sub">Fill in your details and pay to confirm your order.</p>
       </div>
-    </div>
 
-    <!-- Payment Option -->
-    <div id="sectionPayMode">
-      <p class="section-label">Payment Option</p>
-      <div class="pay-toggle" role="group" aria-label="Payment option">
-        <button class="pay-toggle-btn active" id="toggleAdvance" onclick="setPayMode('advance')" type="button">Pay
-          Advance</button>
-        <button class="pay-toggle-btn" id="toggleFull" onclick="setPayMode('full')" type="button">Pay in Full</button>
-      </div>
-    </div>
-
-    <!-- Payment Breakdown -->
-    <div id="sectionBill">
-      <p class="section-label">Payment Breakdown</p>
-      <div class="bill-card">
-        <div class="bill-row">
-          <span class="bill-label">Price for boots (x<?= $qty ?>)</span>
-          <span class="bill-amt">&#8377;<?= number_format($total) ?></span>
+      <!-- Validity badge -->
+      <div>
+        <div class="validity-badge">
+          Order valid for <?= $qty ?> Boot<?= $qty > 1 ? 's' : '' ?>
         </div>
-        <!-- On delivery row (advance mode) -->
-        <div class="bill-row delivery-row" id="onDelRow">
-          <div class="bill-row-label-stack">
-            <span class="bill-label">Pay on Delivery (Remaining)</span>
-            <span class="bill-row-sublabel">&#8377;<?= number_format($onDel / $qty) ?> &times; <?= $qty ?>
-              boot<?= $qty > 1 ? 's' : '' ?></span>
+      </div>
+
+      <!-- Payment Option -->
+      <div id="sectionPayMode">
+        <p class="section-label">Payment Option</p>
+        <div class="pay-toggle" role="group" aria-label="Payment option">
+          <button class="pay-toggle-btn active" id="toggleAdvance" onclick="setPayMode('advance')" type="button">Pay
+            Advance</button>
+          <button class="pay-toggle-btn" id="toggleFull" onclick="setPayMode('full')" type="button">Pay in Full</button>
+        </div>
+      </div>
+
+      <!-- Payment Breakdown -->
+      <div id="sectionBill">
+        <p class="section-label">Payment Breakdown</p>
+        <div class="bill-card">
+          <div class="bill-row">
+            <span class="bill-label">Price for boots (x<?= $qty ?>)</span>
+            <span class="bill-amt">&#8377;<?= number_format($total) ?></span>
           </div>
-          <span class="bill-amt" id="onDelAmt">&#8377;<?= number_format($onDel) ?></span>
-        </div>
-        <!-- Advance row (advance mode) -->
-        <div class="bill-row advance-row" id="advanceRow">
-          <div class="bill-row-label-stack">
-            <span class="bill-label">Pay Now (Advance) <span class="bill-badge">Due now</span></span>
-            <span class="bill-row-sublabel">&#8377;<?= number_format($advance / $qty) ?> &times; <?= $qty ?>
-              boot<?= $qty > 1 ? 's' : '' ?></span>
+          <!-- On delivery row (advance mode) -->
+          <div class="bill-row delivery-row" id="onDelRow">
+            <div class="bill-row-label-stack">
+              <span class="bill-label">Pay on Delivery (Remaining)</span>
+              <span class="bill-row-sublabel">&#8377;<?= number_format($onDel / $qty) ?> &times; <?= $qty ?>
+                boot<?= $qty > 1 ? 's' : '' ?></span>
+            </div>
+            <span class="bill-amt" id="onDelAmt">&#8377;<?= number_format($onDel) ?></span>
           </div>
-          <span class="bill-amt green" id="advanceAmt">&#8377;<?= number_format($advance) ?></span>
+          <!-- Advance row (advance mode) -->
+          <div class="bill-row advance-row" id="advanceRow">
+            <div class="bill-row-label-stack">
+              <span class="bill-label">Pay Now (Advance) <span class="bill-badge">Due now</span></span>
+              <span class="bill-row-sublabel">&#8377;<?= number_format($advance / $qty) ?> &times; <?= $qty ?>
+                boot<?= $qty > 1 ? 's' : '' ?></span>
+            </div>
+            <span class="bill-amt green" id="advanceAmt">&#8377;<?= number_format($advance) ?></span>
+          </div>
+          <div class="bill-row total-row">
+            <span class="bill-label">Total</span>
+            <span class="bill-amt" id="totalAmt">&#8377;<?= number_format($total) ?></span>
+          </div>
         </div>
-        <div class="bill-row total-row">
-          <span class="bill-label">Total</span>
-          <span class="bill-amt" id="totalAmt">&#8377;<?= number_format($total) ?></span>
-        </div>
-      </div>
-      <!-- Pay-now chip -->
-      <div class="pay-now-chip" id="payNowChip">
-        <span class="pay-now-chip-label">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <polyline points="20 6 9 17 4 12" />
-          </svg>
-          <span id="payNowLabel">Amount to pay now (advance)</span>
-        </span>
-        <span class="pay-now-chip-amt" id="payNowAmt">&#8377;<?= number_format($advance) ?></span>
-      </div>
-    </div>
-
-    <!-- QR + UPI -->
-    <div id="sectionQr">
-      <p class="section-label">Scan &amp; Pay</p>
-      <div class="pay-card">
-        <div class="pay-card-qr">
-          <div class="qr-placeholder" id="qrPlaceholder">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <rect x="2" y="2" width="8" height="8" rx="1" />
-              <rect x="14" y="2" width="8" height="8" rx="1" />
-              <rect x="2" y="14" width="8" height="8" rx="1" />
-              <path d="M14 14h2v2h-2zM18 14h2v2h-2zM14 18h2v2h-2zM18 18h2v2h-2z" />
+        <!-- Pay-now chip -->
+        <div class="pay-now-chip" id="payNowChip">
+          <span class="pay-now-chip-label">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="20 6 9 17 4 12" />
             </svg>
-            <span>Loading QR&hellip;</span>
-          </div>
-          <img id="qrImg" src="" alt="UPI QR Code" width="180" height="180"
-            style="display:none;object-fit:contain;border-radius:8px">
-        </div>
-        <div class="pay-card-upi">
-          <div>
-            <p class="upi-label">UPI ID</p>
-            <p class="upi-id" id="upiIdText">Loading&hellip;</p>
-          </div>
-          <button class="copy-btn" onclick="copyUpi()" type="button">Copy</button>
+            <span id="payNowLabel">Amount to pay now (advance)</span>
+          </span>
+          <span class="pay-now-chip-amt" id="payNowAmt">&#8377;<?= number_format($advance) ?></span>
         </div>
       </div>
-      <!-- This addition is for testing the Pay securely footer position -->
-      <div
-        style="display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; border-bottom: 1px solid var(--border); background: var(--surface);">
-        <span style="font-size: 11px; font-weight: 800; letter-spacing: 0.08em; color: var(--text-2);">PAY
-          SECURELY</span>
-        <span
-          style="display: flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 600; color: var(--text-m);">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-            stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-          </svg>
-          100% Secure Payment
-        </span>
-      </div>
-    </div>
 
-    <!-- Your Details -->
-    <div id="sectionDetails">
-      <p class="section-label">Your Details</p>
-      <div class="details-card">
-        <div class="field">
-          <label for="custName">Full Name</label>
-          <input class="inp" id="custName" type="text" placeholder="Your full name" autocomplete="name"
-            oninput="onNameInput(this)">
-        </div>
-        <div class="field">
-          <label for="custWa">WhatsApp Number</label>
-          <div style="display:flex;align-items:stretch;gap:0">
-            <div
-              style="padding:11px 13px;border:1.5px solid var(--border-hover);border-right:none;border-radius:var(--radius-sm) 0 0 var(--radius-sm);font-size:15px;font-weight:600;color:var(--text-m);background:var(--surface);white-space:nowrap;flex-shrink:0">
-              +91</div>
-            <input class="inp" id="custWa" type="tel" placeholder="10-digit number" autocomplete="tel" maxlength="10"
-              oninput="onPhoneInput(this)" style="border-radius:0 var(--radius-sm) var(--radius-sm) 0;border-left:none">
+      <!-- QR + UPI -->
+      <div id="sectionQr">
+        <p class="section-label">Scan &amp; Pay</p>
+        <div class="pay-card">
+          <div class="pay-card-qr">
+            <div class="qr-placeholder" id="qrPlaceholder">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="2" y="2" width="8" height="8" rx="1" />
+                <rect x="14" y="2" width="8" height="8" rx="1" />
+                <rect x="2" y="14" width="8" height="8" rx="1" />
+                <path d="M14 14h2v2h-2zM18 14h2v2h-2zM14 18h2v2h-2zM18 18h2v2h-2z" />
+              </svg>
+              <span>Loading QR&hellip;</span>
+            </div>
+            <img id="qrImg" src="" alt="UPI QR Code" width="180" height="180"
+              style="display:none;object-fit:contain;border-radius:8px">
           </div>
-          <small>We'll send your order confirmation to this number.</small>
+          <div class="pay-card-upi">
+            <div>
+              <p class="upi-label">UPI ID</p>
+              <p class="upi-id" id="upiIdText">Loading&hellip;</p>
+            </div>
+            <button class="copy-btn" onclick="copyUpi()" type="button">Copy</button>
+          </div>
+
+          <div
+            style="display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; border-top: 1px solid var(--border); background: var(--surface);">
+            <span style="font-size: 11px; font-weight: 800; letter-spacing: 0.08em; color: var(--text-2);">PAY
+              SECURELY</span>
+            <span
+              style="display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: var(--success);">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg>
+              100% Secure Payment
+            </span>
+          </div>
+
         </div>
       </div>
-    </div>
 
-    <div class="err-banner" id="errBanner"></div>
+      <!-- Your Details -->
+      <div id="sectionDetails">
+        <p class="section-label">Your Details</p>
+        <div class="details-card">
+          <div class="field">
+            <label for="custName">Full Name</label>
+            <input class="inp" id="custName" type="text" placeholder="Your full name" autocomplete="name"
+              oninput="onNameInput(this)">
+          </div>
+          <div class="field">
+            <label for="custWa">WhatsApp Number</label>
+            <div style="display:flex;align-items:stretch;gap:0">
+              <div
+                style="padding:11px 13px;border:1.5px solid var(--border-hover);border-right:none;border-radius:var(--radius-sm) 0 0 var(--radius-sm);font-size:15px;font-weight:600;color:var(--text-m);background:var(--surface);white-space:nowrap;flex-shrink:0">
+                +91</div>
+              <input class="inp" id="custWa" type="tel" placeholder="10-digit number" autocomplete="tel" maxlength="10"
+                oninput="onPhoneInput(this)"
+                style="border-radius:0 var(--radius-sm) var(--radius-sm) 0;border-left:none">
+            </div>
+            <small>We'll send your order confirmation to this number.</small>
+          </div>
+        </div>
+      </div>
 
-    <div id="sectionSubmit">
-      <button class="btn-primary" id="submitBtn" onclick="submitOrder()" disabled>Place Order</button>
-    </div>
-    </div>
+      <div class="err-banner" id="errBanner"></div>
+
+      <div id="sectionSubmit">
+        <button class="btn-primary" id="submitBtn" onclick="submitOrder()" disabled>Place Order</button>
+      </div>
 
     </div>
     <div class="delivery-screen" id="deliveryScreen">
@@ -922,7 +1032,6 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
       </div>
     </div>
 
-    <!-- Success screen -->
     <div class="success-screen" id="successScreen">
       <div class="success-icon" aria-hidden="true">
         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
