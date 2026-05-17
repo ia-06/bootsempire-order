@@ -39,6 +39,7 @@ if ($method === 'POST') {
     $qty = max(1, (int) ($body['qty'] ?? 1));
     $totalPrice = max(0, (int) ($body['totalPrice'] ?? 6700));
     $advanceAmount = max(0, (int) ($body['advanceAmount'] ?? 2700));
+    $addonsPrice = max(0, (int) ($body['addonsPrice'] ?? 0));
 
     $slug = null;
     for ($i = 0; $i < 20; $i++) {
@@ -58,10 +59,10 @@ if ($method === 'POST') {
 
     $id = bin2hex(random_bytes(8));
     $stmt = $pdo->prepare('
-        INSERT INTO `order_links` (id, slug, channel, qty, total_price, advance_amount)
-        VALUES (?, ?, ?, ?, ?, ?)
+        INSERT INTO `order_links` (id, slug, channel, qty, total_price, advance_amount, addons_price)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
     ');
-    $stmt->execute([$id, $slug, $channel, $qty, $totalPrice, $advanceAmount]);
+    $stmt->execute([$id, $slug, $channel, $qty, $totalPrice, $advanceAmount, $addonsPrice]);
 
     echo json_encode(['ok' => true, 'slug' => $slug, 'order_id' => 'BE-' . $slug]);
     exit;

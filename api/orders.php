@@ -125,11 +125,11 @@ if ($method === 'GET') {
             o.created_at  AS submitted_at,
             o.confirmed_at,
             o.remarks,
-            o.screenshot,
             l.slug,
             l.qty,
             l.total_price,
             l.advance_amount AS link_advance,
+            l.addons_price,
             l.channel
         FROM `orders` o
         INNER JOIN `order_links` l ON l.slug = o.link_slug
