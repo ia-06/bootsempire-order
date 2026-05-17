@@ -1,0 +1,8 @@
+# Block direct browser access to all API PHP files.
+# They should only be called via fetch/XHR from the front end.
+Options -Indexes
+<FilesMatch "\.php$">
+  # Allow all origins — PHP handles CORS + session auth internally.
+  # To restrict to same-origin only, uncomment below:
+  # Require all denied
+</FilesMatch>
