@@ -4,28 +4,31 @@ header('Content-Type: application/json');
 header('X-Content-Type-Options: nosniff');
 
 $method = $_SERVER['REQUEST_METHOD'];
-$pdo    = getPDO();
+$pdo = getPDO();
 
-function saveUpload(array $file, string $prefix): ?string {
-    if (empty($file['tmp_name']) || $file['error'] !== UPLOAD_ERR_OK) return null;
-    $ext     = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-    $allowed = ['jpg','jpeg','png','webp','gif'];
-    if (!in_array($ext, $allowed, true)) return null;
+function saveUpload(array $file, string $prefix): ?string
+{
+    if (empty($file['tmp_name']) || $file['error'] !== UPLOAD_ERR_OK)
+        return null;
+    $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+    $allowed = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+    if (!in_array($ext, $allowed, true))
+        return null;
     $filename = $prefix . '_' . time() . '_' . bin2hex(random_bytes(4)) . '.' . $ext;
-    $dest     = __DIR__ . '/../uploads/' . $filename;
+    $dest = __DIR__ . '/../uploads/' . $filename;
     return move_uploaded_file($file['tmp_name'], $dest) ? $filename : null;
 }
 
 // POST — submit a new order (public, via link slug)
 if ($method === 'POST') {
-    $slug    = trim($_POST['slug']    ?? '');
-    $name    = trim($_POST['name']    ?? '');
-    $waRaw   = trim($_POST['whatsapp'] ?? '');
+    $slug = trim($_POST['slug'] ?? '');
+    $name = trim($_POST['name'] ?? '');
+    $waRaw = trim($_POST['whatsapp'] ?? '');
     $payMode = trim($_POST['payMode'] ?? 'advance');
 
     if (!$slug || !$name || !$waRaw) {
         http_response_code(400);
-        echo json_encode(['ok'=>false,'error'=>'Missing required fields.']);
+        echo json_encode(['ok' => false, 'error' => 'Missing required fields.']);
         exit;
     }
 
@@ -36,7 +39,7 @@ if ($method === 'POST') {
     }
     if (strlen($waDigits) !== 10) {
         http_response_code(400);
-        echo json_encode(['ok'=>false,'error'=>'Invalid WhatsApp number.']);
+        echo json_encode(['ok' => false, 'error' => 'Invalid WhatsApp number.']);
         exit;
     }
     $whatsapp = '91' . $waDigits;
@@ -47,41 +50,43 @@ if ($method === 'POST') {
     $link = $linkStmt->fetch();
     if (!$link) {
         http_response_code(404);
-        echo json_encode(['ok'=>false,'error'=>'Invalid order link.']);
+        echo json_encode(['ok' => false, 'error' => 'Invalid order link.']);
         exit;
-    }
-
-    // Handle optional screenshot upload
-    $screenshotName = null;
-    if (!empty($_FILES['screenshot']['tmp_name'])) {
-        $screenshotName = saveUpload($_FILES['screenshot'], 'ss');
     }
 
     // Amount paid: full pay = total * qty, advance = advance_amount from link
     $paidAmount = $payMode === 'full'
-        ? (int)$link['total_price'] * (int)$link['qty']
-        : (int)$link['advance_amount'];
+        ? (int) $link['total_price'] * (int) $link['qty']
+        : (int) $link['advance_amount'];
 
     $orderId = 'BE-' . strtoupper($slug) . '-' . date('ymd') . '-' . strtoupper(bin2hex(random_bytes(2)));
-    $id      = sprintf('%s-%s-%s-%s-%s',
-        bin2hex(random_bytes(4)), bin2hex(random_bytes(2)),
-        bin2hex(random_bytes(2)), bin2hex(random_bytes(2)),
-        bin2hex(random_bytes(6)));
+    $id = sprintf(
+        '%s-%s-%s-%s-%s',
+        bin2hex(random_bytes(4)),
+        bin2hex(random_bytes(2)),
+        bin2hex(random_bytes(2)),
+        bin2hex(random_bytes(2)),
+        bin2hex(random_bytes(6))
+    );
 
     $stmt = $pdo->prepare('
         INSERT INTO `orders`
-        (id, order_id, boot_id, boot_name, name, whatsapp, estimated_delivery,
-         advance_amount, status, link_slug, channel, pay_mode, screenshot)
-        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
+        (id, order_id, name, whatsapp, advance_amount, status, link_slug, channel, pay_mode)
+        VALUES (?,?,?,?,?,?,?,?,?)
     ');
     $stmt->execute([
-        $id, $orderId, 'custom', 'Custom Boot', $name, $whatsapp,
-        '15-20 days', $paidAmount,
-        'PENDING_ACTION', $slug, $link['channel'], $payMode,
-        $screenshotName
+        $id,
+        $orderId,
+        $name,
+        $whatsapp,
+        $paidAmount,
+        'PENDING_ACTION',
+        $slug,
+        $link['channel'],
+        $payMode
     ]);
 
-    echo json_encode(['ok'=>true,'id'=>$id,'orderId'=>$orderId,'channel'=>$link['channel']]);
+    echo json_encode(['ok' => true, 'id' => $id, 'orderId' => $orderId, 'channel' => $link['channel']]);
     exit;
 }
 
@@ -89,7 +94,7 @@ if ($method === 'POST') {
 session_start();
 if (empty($_SESSION['admin_authed'])) {
     http_response_code(403);
-    echo json_encode(['ok'=>false,'error'=>'Forbidden']);
+    echo json_encode(['ok' => false, 'error' => 'Forbidden']);
     exit;
 }
 
@@ -99,12 +104,12 @@ $channel = $_SESSION['admin_channel'] ?? null;
 if ($method === 'GET') {
     if (!$channel) {
         http_response_code(403);
-        echo json_encode(['ok'=>false,'error'=>'No channel in session']);
+        echo json_encode(['ok' => false, 'error' => 'No channel in session']);
         exit;
     }
 
-    $base = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']==='on' ? 'https' : 'http')
-          . '://' . $_SERVER['HTTP_HOST'];
+    $base = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http')
+        . '://' . $_SERVER['HTTP_HOST'];
     $path = rtrim(dirname(dirname($_SERVER['SCRIPT_NAME'])), '/') . '/uploads/';
 
     // All orders joined with link config
@@ -138,10 +143,10 @@ if ($method === 'GET') {
     $statusMap = [
         'PENDING_ACTION' => 'PENDING_ACTION',
         'PAYMENT_MARKED' => 'PENDING_ACTION',
-        'PENDING'        => 'PENDING_ACTION',
-        'CONFIRMED'      => 'CONFIRMED',
-        'REJECTED'       => 'ISSUE_RAISED',
-        'ISSUE_RAISED'   => 'ISSUE_RAISED',
+        'PENDING' => 'PENDING_ACTION',
+        'CONFIRMED' => 'CONFIRMED',
+        'REJECTED' => 'ISSUE_RAISED',
+        'ISSUE_RAISED' => 'ISSUE_RAISED',
     ];
 
     foreach ($orderRows as &$row) {
@@ -179,33 +184,33 @@ if ($method === 'GET') {
 
 // PATCH — update status
 if ($method === 'PATCH') {
-    $body    = json_decode(file_get_contents('php://input'), true);
-    $id      = $body['id']      ?? null;
-    $status  = $body['status']  ?? null;
+    $body = json_decode(file_get_contents('php://input'), true);
+    $id = $body['id'] ?? null;
+    $status = $body['status'] ?? null;
     $remarks = $body['remarks'] ?? null;
 
     $allowed = ['CONFIRMED', 'ISSUE_RAISED'];
     if (!$id || !in_array($status, $allowed, true)) {
         http_response_code(400);
-        echo json_encode(['ok'=>false,'error'=>'Missing id or invalid status']);
+        echo json_encode(['ok' => false, 'error' => 'Missing id or invalid status']);
         exit;
     }
 
     $confirmedAt = $status === 'CONFIRMED' ? date('Y-m-d H:i:s') : null;
-    $remarksVal  = $status === 'ISSUE_RAISED' ? $remarks : null;
+    $remarksVal = $status === 'ISSUE_RAISED' ? $remarks : null;
 
     $stmt = $pdo->prepare('UPDATE `orders` SET status=?, confirmed_at=?, remarks=? WHERE id=?');
     $stmt->execute([$status, $confirmedAt, $remarksVal, $id]);
 
-    echo json_encode(['ok'=>true]);
+    echo json_encode(['ok' => true]);
     exit;
 }
 
 // DELETE — delete a single order by order_row_id, OR a link + all its orders by slug
 if ($method === 'DELETE') {
     $body = json_decode(file_get_contents('php://input'), true);
-    $slug        = $body['slug']         ?? null;
-    $orderRowId  = $body['order_row_id'] ?? null;
+    $slug = $body['slug'] ?? null;
+    $orderRowId = $body['order_row_id'] ?? null;
 
     if ($orderRowId) {
         // Delete single order
@@ -214,10 +219,11 @@ if ($method === 'DELETE') {
         $data = $row->fetch();
         if ($data && !empty($data['screenshot'])) {
             $f = __DIR__ . '/../uploads/' . basename($data['screenshot']);
-            if (file_exists($f)) @unlink($f);
+            if (file_exists($f))
+                @unlink($f);
         }
         $pdo->prepare('DELETE FROM `orders` WHERE id=?')->execute([$orderRowId]);
-        echo json_encode(['ok'=>true]);
+        echo json_encode(['ok' => true]);
         exit;
     }
 
@@ -228,19 +234,20 @@ if ($method === 'DELETE') {
         foreach ($rows->fetchAll() as $data) {
             if (!empty($data['screenshot'])) {
                 $f = __DIR__ . '/../uploads/' . basename($data['screenshot']);
-                if (file_exists($f)) @unlink($f);
+                if (file_exists($f))
+                    @unlink($f);
             }
         }
         $pdo->prepare('DELETE FROM `orders` WHERE link_slug=?')->execute([$slug]);
         $pdo->prepare('DELETE FROM `order_links` WHERE slug=? AND channel=?')->execute([$slug, $channel]);
-        echo json_encode(['ok'=>true]);
+        echo json_encode(['ok' => true]);
         exit;
     }
 
     http_response_code(400);
-    echo json_encode(['ok'=>false,'error'=>'Missing slug or order_row_id']);
+    echo json_encode(['ok' => false, 'error' => 'Missing slug or order_row_id']);
     exit;
 }
 
 http_response_code(405);
-echo json_encode(['ok'=>false,'error'=>'Method not allowed']);
+echo json_encode(['ok' => false, 'error' => 'Method not allowed']);
