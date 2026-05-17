@@ -1,0 +1,17 @@
+# Bootsempire Orders — root .htaccess
+
+Options -Indexes
+
+# Block direct access to sensitive files
+<FilesMatch "^(db|config\.sample)\.php$">
+  Require all denied
+</FilesMatch>
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # /XXXXXX (6-digit slug) -> order.php?slug=XXXXXX
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^([0-9]{6})/?$ order.php?slug=$1 [L,QSA]
+</IfModule>
