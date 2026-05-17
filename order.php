@@ -81,10 +81,16 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
       text-rendering: optimizeLegibility;
       -webkit-text-size-adjust: none;
       scroll-behavior: smooth;
+      overflow-x: hidden;
+      /* Fixes horizontal scroll offset */
     }
 
     body {
       min-height: 100dvh;
+      width: 100%;
+      /* Ensures bounds are respected */
+      overflow-x: hidden;
+      /* Prevents 100vw gap bugs */
       font-family: var(--font);
       font-size: 15px;
       line-height: 1.6;
@@ -758,7 +764,8 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
     }
 
     .ticker-wrap {
-      width: 100vw;
+      width: 100%;
+      /* Changed from 100vw */
       height: 40px;
       background-color: #3AA63A;
       overflow: hidden;
@@ -772,8 +779,10 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
       gap: 30px;
       white-space: nowrap;
       padding-right: 30px;
-      animation: tickerLoop 30s linear infinite;
-      /* Desktop Speed (25%) */
+      flex-shrink: 0;
+      /* CRITICAL: Prevents content from squishing */
+      animation: tickerLoop 25s linear infinite;
+      /* Desktop Speed */
     }
 
     .ticker-text {
@@ -807,10 +816,10 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
       }
 
       100% {
-        transform: translateX(-50%);
+        transform: translateX(-100%);
       }
 
-      /* Translates exactly half the duplicated content */
+      /* Scrolls exactly its own width seamlessly */
     }
 
     @media (max-width: 768px) {
@@ -844,11 +853,16 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
   <div class="ticker-wrap">
     <div class="ticker-content">
       <svg class="ticker-svg" viewBox="0 0 24 24">
-        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+        <path
+          d="M240,128a15.79,15.79,0,0,1-10.5,15l-63.44,23.07L143,229.5a16,16,0,0,1-30,0L89.94,166.06,26.5,143a16,16,0,0,1,0-30L89.94,89.94,113,26.5a16,16,0,0,1,30,0l23.07,63.44L229.5,113A15.79,15.79,0,0,1,240,128Z">
+        </path>
       </svg>
       <span class="ticker-text">WORLDWIDE SHIPPING</span>
+
       <svg class="ticker-svg" viewBox="0 0 24 24">
-        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+        <path
+          d="M240,128a15.79,15.79,0,0,1-10.5,15l-63.44,23.07L143,229.5a16,16,0,0,1-30,0L89.94,166.06,26.5,143a16,16,0,0,1,0-30L89.94,89.94,113,26.5a16,16,0,0,1,30,0l23.07,63.44L229.5,113A15.79,15.79,0,0,1,240,128Z">
+        </path>
       </svg>
       <span class="ticker-text">
         <span class="text-desktop">TRUSTED BY MORE THAN 10,000 PLAYERS</span>
@@ -856,11 +870,52 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
       </span>
 
       <svg class="ticker-svg" viewBox="0 0 24 24">
-        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+        <path
+          d="M240,128a15.79,15.79,0,0,1-10.5,15l-63.44,23.07L143,229.5a16,16,0,0,1-30,0L89.94,166.06,26.5,143a16,16,0,0,1,0-30L89.94,89.94,113,26.5a16,16,0,0,1,30,0l23.07,63.44L229.5,113A15.79,15.79,0,0,1,240,128Z">
+        </path>
       </svg>
       <span class="ticker-text">WORLDWIDE SHIPPING</span>
+
       <svg class="ticker-svg" viewBox="0 0 24 24">
-        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+        <path
+          d="M240,128a15.79,15.79,0,0,1-10.5,15l-63.44,23.07L143,229.5a16,16,0,0,1-30,0L89.94,166.06,26.5,143a16,16,0,0,1,0-30L89.94,89.94,113,26.5a16,16,0,0,1,30,0l23.07,63.44L229.5,113A15.79,15.79,0,0,1,240,128Z">
+        </path>
+      </svg>
+      <span class="ticker-text">
+        <span class="text-desktop">TRUSTED BY MORE THAN 10,000 PLAYERS</span>
+        <span class="text-mobile">TRUSTED BY MORE THAN 10K+ PLAYERS</span>
+      </span>
+    </div>
+
+    <div class="ticker-content" aria-hidden="true">
+      <svg class="ticker-svg" viewBox="0 0 24 24">
+        <path
+          d="M240,128a15.79,15.79,0,0,1-10.5,15l-63.44,23.07L143,229.5a16,16,0,0,1-30,0L89.94,166.06,26.5,143a16,16,0,0,1,0-30L89.94,89.94,113,26.5a16,16,0,0,1,30,0l23.07,63.44L229.5,113A15.79,15.79,0,0,1,240,128Z">
+        </path>
+      </svg>
+      <span class="ticker-text">WORLDWIDE SHIPPING</span>
+
+      <svg class="ticker-svg" viewBox="0 0 24 24">
+        <path
+          d="M240,128a15.79,15.79,0,0,1-10.5,15l-63.44,23.07L143,229.5a16,16,0,0,1-30,0L89.94,166.06,26.5,143a16,16,0,0,1,0-30L89.94,89.94,113,26.5a16,16,0,0,1,30,0l23.07,63.44L229.5,113A15.79,15.79,0,0,1,240,128Z">
+        </path>
+      </svg>
+      <span class="ticker-text">
+        <span class="text-desktop">TRUSTED BY MORE THAN 10,000 PLAYERS</span>
+        <span class="text-mobile">TRUSTED BY MORE THAN 10K+ PLAYERS</span>
+      </span>
+
+      <svg class="ticker-svg" viewBox="0 0 24 24">
+        <path
+          d="M240,128a15.79,15.79,0,0,1-10.5,15l-63.44,23.07L143,229.5a16,16,0,0,1-30,0L89.94,166.06,26.5,143a16,16,0,0,1,0-30L89.94,89.94,113,26.5a16,16,0,0,1,30,0l23.07,63.44L229.5,113A15.79,15.79,0,0,1,240,128Z">
+        </path>
+      </svg>
+      <span class="ticker-text">WORLDWIDE SHIPPING</span>
+
+      <svg class="ticker-svg" viewBox="0 0 24 24">
+        <path
+          d="M240,128a15.79,15.79,0,0,1-10.5,15l-63.44,23.07L143,229.5a16,16,0,0,1-30,0L89.94,166.06,26.5,143a16,16,0,0,1,0-30L89.94,89.94,113,26.5a16,16,0,0,1,30,0l23.07,63.44L229.5,113A15.79,15.79,0,0,1,240,128Z">
+        </path>
       </svg>
       <span class="ticker-text">
         <span class="text-desktop">TRUSTED BY MORE THAN 10,000 PLAYERS</span>
