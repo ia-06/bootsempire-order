@@ -1730,6 +1730,35 @@ session_start();
           </div>
         </div>
         <form class="settings-grid" id="settingsForm" onsubmit="saveSettings(event)">
+          <div class="settings-card" id="masterAdminSection" style="display: none;">
+            <p class="settings-title">Manage Employee Accounts (Master Only)</p>
+            <p class="sec-sub" style="margin-bottom:12px;">Add standard profiles or update credentials. To delete an
+              account entirely, save it with an empty password value.</p>
+            <div class="fields"
+              style="border-bottom: 1px solid var(--border); padding-bottom:14px; margin-bottom:14px;">
+              <div class="field-row">
+                <label>Employee Username / ID</label>
+                <input class="inp" id="empIdInput" type="text" placeholder="e.g. employee1">
+              </div>
+              <div class="field-row">
+                <label>Password</label>
+                <input class="inp" id="empPassInput" type="text"
+                  placeholder="Enter new password or clear to delete profile">
+              </div>
+              <div>
+                <button type="button" class="btn-ghost" onclick="saveEmployeeAccount()"
+                  style="background:var(--accent); color:var(--accent-t); font-weight:700; padding:10px 18px;">Update
+                  Employee Profile</button>
+              </div>
+            </div>
+            <label
+              style="font-size: 13px; font-weight: 600; color: var(--text-2); display:block; margin-bottom:6px;">Current
+              Registered Profiles</label>
+            <div id="employeeProfilesList"
+              style="font-family:monospace; font-size:13px; background:var(--surface); padding:10px; border-radius:var(--radius-sm); max-height:150px; overflow-y:auto; display:flex; flex-direction:column; gap:4px;">
+              <span style="color:var(--text-f)">No profiles registered.</span>
+            </div>
+          </div>
           <div class="settings-card">
             <p class="settings-title">Payment</p>
             <div class="fields">
@@ -1806,6 +1835,7 @@ session_start();
     var HOST = location.origin;
     var channel = null;
     var removeQrFlag = false;
+    var isMaster = false;
 
     // ---- Toast ----
     function showToast(msg) {
@@ -1821,6 +1851,7 @@ session_start();
       .then(function (r) { return r.json(); })
       .then(function (s) {
         if (!s.authed) return;
+        isMaster = !!s.is_master; // Save authentication level state globally
         document.getElementById('hdrRight').style.display = 'flex';
         if (s.channel) {
           channel = s.channel;
@@ -1879,6 +1910,7 @@ session_start();
         .then(function (r) { return r.json(); })
         .then(function (d) {
           if (d.ok) {
+            isMaster = !!d.is_master; // Track the authorization state
             document.getElementById('hdrRight').style.display = 'flex';
             show('screenChannel');
           } else {
@@ -2182,11 +2214,30 @@ session_start();
             document.getElementById('qrOverlay').style.display = 'flex';
             document.getElementById('qrEmptyState').style.visibility = 'hidden';
           } else {
-            removeQr(); // ensure it resets when switching channels
+            removeQr();
           }
           if (d.totalPrice) document.getElementById('genTotal').value = d.totalPrice;
           if (d.advanceAmount) document.getElementById('genAdvance').value = d.advanceAmount;
           updateGenCalc();
+
+          // DYNAMIC EVALUATION: If Session belongs to Master, render Employee Registry Component
+          var masterSec = document.getElementById('masterAdminSection');
+          if (isMaster) {
+            masterSec.style.display = 'block';
+            var listContainer = document.getElementById('employeeProfilesList');
+            if (d.employees && d.employees.length > 0) {
+              listContainer.innerHTML = d.employees.map(function (emp) {
+                return '<div style="display:flex; justify-content:space-between; padding:3px 0; border-bottom:1px dashed var(--border);">' +
+                  '<span>👤 <strong>' + esc(emp.id) + '</strong></span>' +
+                  '<span style="color:var(--text-m)">🔑 ' + esc(emp.password) + '</span>' +
+                  '</div>';
+              }).join('');
+            } else {
+              listContainer.innerHTML = '<span style="color:var(--text-f)">No standard profiles registered.</span>';
+            }
+          } else {
+            masterSec.style.display = 'none';
+          }
         })
         .catch(function () { });
     }
@@ -2222,6 +2273,33 @@ session_start();
           }
         })
         .catch(function () { showToast('Network error.'); });
+    }
+
+    function saveEmployeeAccount() {
+      var empId = document.getElementById('empIdInput').value.trim();
+      var empPass = document.getElementById('empPassInput').value.trim();
+
+      if (!empId) {
+        showToast('Please specify a valid Username/ID.');
+        return;
+      }
+
+      var fd = new FormData();
+      fd.append('action', 'updateEmployee');
+      fd.append('employeeId', empId);
+      fd.append('employeePassword', empPass);
+
+      fetch('api/config.php', { method: 'POST', body: fd })
+        .then(function (r) { return r.json(); })
+        .then(function (d) {
+          showToast(d.message || 'Operation successful!');
+          document.getElementById('empIdInput').value = '';
+          document.getElementById('empPassInput').value = '';
+          loadSettings(); // Refresh view panel elements context layout
+        })
+        .catch(function () {
+          showToast('Failed to modify account settings data.');
+        });
     }
 
     // ---- QR helpers ----

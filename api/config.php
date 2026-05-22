@@ -6,21 +6,7 @@ header('X-Content-Type-Options: nosniff');
 $method = $_SERVER['REQUEST_METHOD'];
 $pdo = getPDO();
 
-// --- AUTO MIGRATIONS (Runs safely on every config call to patch DB) ---
-try {
-    $pdo->exec("ALTER TABLE `config` DROP PRIMARY KEY, MODIFY COLUMN `id` VARCHAR(20) NOT NULL PRIMARY KEY");
-} catch (Exception $e) {
-}
-try {
-    $pdo->exec("ALTER TABLE `config` ADD COLUMN IF NOT EXISTS `addons_price` INT UNSIGNED NOT NULL DEFAULT 0");
-} catch (Exception $e) {
-}
-try {
-    $pdo->exec("ALTER TABLE `order_links` ADD COLUMN IF NOT EXISTS `addons_price` INT UNSIGNED NOT NULL DEFAULT 0");
-} catch (Exception $e) {
-}
-// ----------------------------------------------------------------------
-
+// Helper to safely get config values
 function getConfig(PDO $pdo, string $channel): array
 {
     $stmt = $pdo->prepare('SELECT * FROM `config` WHERE id=? LIMIT 1');
@@ -35,7 +21,7 @@ function getConfig(PDO $pdo, string $channel): array
 }
 
 if ($method === 'GET') {
-    // Slug lookup (public) — used by order.php
+    // Public Slug Lookup
     if (isset($_GET['slug'])) {
         $slug = $_GET['slug'];
         $stmt = $pdo->prepare('SELECT * FROM `order_links` WHERE slug=?');
@@ -49,7 +35,6 @@ if ($method === 'GET') {
 
         $channel = $link['channel'];
         $cfg = getConfig($pdo, $channel);
-        $base = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'];
 
         $qrUrl = null;
         if (!empty($cfg['qr_image'])) {
@@ -76,7 +61,7 @@ if ($method === 'GET') {
         exit;
     }
 
-    // Admin config fetch
+    // Admin Config & Employee accounts data payload
     session_start();
     if (empty($_SESSION['admin_authed']) || empty($_SESSION['admin_channel'])) {
         http_response_code(403);
@@ -87,7 +72,7 @@ if ($method === 'GET') {
     $cfg = getConfig($pdo, $channel);
     $qrUrl = $cfg['qr_image'] ? '../uploads/' . basename($cfg['qr_image']) : null;
 
-    echo json_encode([
+    $response = [
         'upiId' => $cfg['upi_id'],
         'qrImageUrl' => $qrUrl,
         'totalPrice' => (int) $cfg['total_price'],
@@ -95,15 +80,77 @@ if ($method === 'GET') {
         'addonsPrice' => (int) $cfg['addons_price'],
         'whatsappLink' => $cfg['whatsapp_link'] ?? '',
         'instagramLink' => $cfg['instagram_link'] ?? ''
-    ]);
+    ];
+
+    // If the master admin requested data, append current standard employee profiles
+    if (!empty($_SESSION['is_master'])) {
+        $empStmt = $pdo->query('SELECT id, password FROM `admins` ORDER BY id ASC');
+        $response['employees'] = $empStmt->fetchAll();
+    }
+
+    echo json_encode($response);
     exit;
 }
 
 if ($method === 'POST') {
     session_start();
-    if (empty($_SESSION['admin_authed']) || empty($_SESSION['admin_channel'])) {
+    if (empty($_SESSION['admin_authed'])) {
         http_response_code(403);
         echo json_encode(['ok' => false, 'error' => 'Forbidden']);
+        exit;
+    }
+
+    // INTERCEPT: Target processing routing for Master Managing Employees
+    if (isset($_POST['action']) && $_POST['action'] === 'updateEmployee') {
+        if (empty($_SESSION['is_master'])) {
+            http_response_code(403);
+            echo json_encode(['ok' => false, 'error' => 'Only Master Admin can modify employees.']);
+            exit;
+        }
+
+        $empId = trim($_POST['employeeId'] ?? '');
+        $empPass = trim($_POST['employeePassword'] ?? '');
+
+        if ($empId === '') {
+            http_response_code(400);
+            echo json_encode(['ok' => false, 'error' => 'Employee username/ID cannot be empty.']);
+            exit;
+        }
+
+        // Check if employee already exists to route between registration vs modification
+        $check = $pdo->prepare('SELECT id FROM `admins` WHERE id = ?');
+        $check->execute([$empId]);
+
+        if ($check->fetch()) {
+            if ($empPass === '') {
+                // If password left empty, drop employee account entirely
+                $del = $pdo->prepare('DELETE FROM `admins` WHERE id = ?');
+                $del->execute([$empId]);
+                echo json_encode(['ok' => true, 'message' => 'Employee removed.']);
+            } else {
+                // Update credentials
+                $upd = $pdo->prepare('UPDATE `admins` SET password = ? WHERE id = ?');
+                $upd->execute([$empPass, $empId]);
+                echo json_encode(['ok' => true, 'message' => 'Employee credentials modified.']);
+            }
+        } else {
+            // New entry creation
+            if ($empPass === '') {
+                http_response_code(400);
+                echo json_encode(['ok' => false, 'error' => 'Password required for new employee accounts.']);
+                exit;
+            }
+            $ins = $pdo->prepare('INSERT INTO `admins` (id, password) VALUES (?, ?)');
+            $ins->execute([$empId, $empPass]);
+            echo json_encode(['ok' => true, 'message' => 'New employee profile provisioned.']);
+        }
+        exit;
+    }
+
+    // Standard channel updates (for both master and employee sessions)
+    if (empty($_SESSION['admin_channel'])) {
+        http_response_code(403);
+        echo json_encode(['ok' => false, 'error' => 'No active channel context.']);
         exit;
     }
 
