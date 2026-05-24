@@ -964,8 +964,7 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
       <div>
         <div class="validity-badge">
           Order valid for
-          <?= $qty ?> Boot
-          <?= $qty > 1 ? 's' : '' ?>
+          <?= $qty ?> Boot<?= $qty > 1 ? 's' : '' ?>
         </div>
       </div>
 
@@ -995,7 +994,7 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
                 </g>
               </svg>
               <div class="bill-text-group">
-                <span class="bill-label">Boot Price (<?= $qty ?>x)</span>
+                <span class="bill-label">Boot Price (<?= $qty ?>×)</span>
               </div>
             </div>
             <span class="bill-amt">&#8377;
@@ -1072,7 +1071,7 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
                     <?= number_format($advance) ?>
                   </span> to Confirm Order</span>
               </span>
-              <span class="pay-now-chip-subtitle">Secure your order. Pay the remaining ₹
+              <span class="pay-now-chip-subtitle" id="payNowSubtitle">Secure your order. Pay the remaining ₹
                 <?= number_format($onDel / $qty) ?> on delivery.
               </span>
             </div>
@@ -1261,21 +1260,36 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
       payMode = mode;
       document.getElementById('toggleAdvance').classList.toggle('active', mode === 'advance');
       document.getElementById('toggleFull').classList.toggle('active', mode === 'full');
+
+      // Formats the number with the ₹ symbol
       var fmt = function (n) { return '\u20B9' + n.toLocaleString('en-IN'); };
+
+      var labelEl = document.getElementById('payNowLabel');
+      var subEl = document.getElementById('payNowSubtitle');
+
       if (mode === 'full') {
         document.getElementById('advanceRow').style.display = 'none';
         document.getElementById('onDelRow').style.display = 'none';
         document.getElementById('totalAmt').textContent = fmt(TOTAL);
-        document.getElementById('payNowLabel').textContent = 'Amount to pay now (full)';
-        document.getElementById('payNowAmt').textContent = fmt(TOTAL);
+
+        // Use innerHTML to preserve the green styled span
+        labelEl.innerHTML = 'Pay <span style="font-size: 20px; color: #2ca659;">' + fmt(TOTAL) + '</span> to Confirm Order';
+        if (subEl) {
+          subEl.textContent = 'Secure your order. Pay ' + fmt(TOTAL) + ' now to confirm your order.';
+        }
       } else {
         document.getElementById('advanceRow').style.display = '';
         document.getElementById('onDelRow').style.display = '';
         document.getElementById('advanceAmt').textContent = fmt(ADVANCE);
         document.getElementById('onDelAmt').textContent = fmt(ON_DEL);
         document.getElementById('totalAmt').textContent = fmt(TOTAL);
-        document.getElementById('payNowLabel').textContent = 'Amount to pay now (advance)';
-        document.getElementById('payNowAmt').textContent = fmt(ADVANCE);
+
+        // Restore default state with advance amount
+        labelEl.innerHTML = 'Pay <span style="font-size: 20px; color: #2ca659;">' + fmt(ADVANCE) + '</span> to Confirm Order';
+        if (subEl) {
+          // Evaluates the per-item delivery calculation directly inside JS
+          subEl.textContent = 'Secure your order. Pay the remaining ' + fmt(ON_DEL / <?= $qty ?>) + ' on delivery.';
+        }
       }
     }
 
