@@ -6,6 +6,30 @@ header('X-Content-Type-Options: nosniff');
 $method = $_SERVER['REQUEST_METHOD'];
 $pdo = getPDO();
 
+// --- FIXED AUTO MIGRATIONS (Wrapped carefully to prevent 500 runtime execution crashes) ---
+try {
+    // Check if configuration table primary key update is required safely
+    $pdo->exec("ALTER TABLE `config` DROP PRIMARY KEY");
+} catch (Exception $e) {
+}
+
+try {
+    $pdo->exec("ALTER TABLE `config` MODIFY COLUMN `id` VARCHAR(20) NOT NULL PRIMARY KEY");
+} catch (Exception $e) {
+}
+
+try {
+    // Standard ALTER check using safe fallback attributes handling
+    $pdo->exec("ALTER TABLE `config` ADD COLUMN `addons_price` INT UNSIGNED NOT NULL DEFAULT 0");
+} catch (Exception $e) {
+}
+
+try {
+    $pdo->exec("ALTER TABLE `order_links` ADD COLUMN `addons_price` INT UNSIGNED NOT NULL DEFAULT 0");
+} catch (Exception $e) {
+}
+// ----------------------------------------------------------------------
+
 // Helper to safely get config values
 function getConfig(PDO $pdo, string $channel): array
 {

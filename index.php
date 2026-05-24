@@ -2208,34 +2208,37 @@ session_start();
             document.getElementById('sAddons').value = d.addonsPrice;
             document.getElementById('genAddons').value = d.addonsPrice;
           }
-          if (d.qrImageUrl) {
+
+          // FIX: Confirm the dynamic property structure values exist prior to mutating the DOM
+          if (d.qrImageUrl && d.qrImageUrl.trim() !== '' && !d.qrImageUrl.endsWith('undefined') && !d.qrImageUrl.endsWith('/')) {
             document.getElementById('qrPrev').src = d.qrImageUrl;
             document.getElementById('qrPrev').style.display = 'block';
             document.getElementById('qrOverlay').style.display = 'flex';
             document.getElementById('qrEmptyState').style.visibility = 'hidden';
           } else {
-            removeQr();
+            removeQr(); // Reset to clean dropzone visually without generating broken asset calls
           }
+
           if (d.totalPrice) document.getElementById('genTotal').value = d.totalPrice;
           if (d.advanceAmount) document.getElementById('genAdvance').value = d.advanceAmount;
           updateGenCalc();
 
-          // DYNAMIC EVALUATION: If Session belongs to Master, render Employee Registry Component
+          // Evaluate Master Admin UI context safely
           var masterSec = document.getElementById('masterAdminSection');
-          if (isMaster) {
+          if (isMaster && masterSec) {
             masterSec.style.display = 'block';
             var listContainer = document.getElementById('employeeProfilesList');
-            if (d.employees && d.employees.length > 0) {
+            if (listContainer && d.employees && d.employees.length > 0) {
               listContainer.innerHTML = d.employees.map(function (emp) {
                 return '<div style="display:flex; justify-content:space-between; padding:3px 0; border-bottom:1px dashed var(--border);">' +
                   '<span>👤 <strong>' + esc(emp.id) + '</strong></span>' +
                   '<span style="color:var(--text-m)">🔑 ' + esc(emp.password) + '</span>' +
                   '</div>';
               }).join('');
-            } else {
+            } else if (listContainer) {
               listContainer.innerHTML = '<span style="color:var(--text-f)">No standard profiles registered.</span>';
             }
-          } else {
+          } else if (masterSec) {
             masterSec.style.display = 'none';
           }
         })
