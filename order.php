@@ -245,6 +245,21 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
       border-bottom: none;
     }
 
+    /* NEW: Aligns the SVG and text group perfectly on the horizontal axis */
+    .bill-row-left {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 14px;
+    }
+
+    /* NEW: Stacks the text vertically next to the SVG */
+    .bill-text-group {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
     .bill-row.total-row {
       background: #f8fafc;
       font-weight: 700;
@@ -263,6 +278,8 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
 
     .bill-label {
       color: var(--text-2);
+      display: flex;
+      align-items: center;
     }
 
     .bill-amt {
@@ -283,12 +300,6 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
       background: #dcfce7;
       color: #15803d;
       margin-left: 8px;
-    }
-
-    .bill-row-label-stack {
-      display: flex;
-      flex-direction: column;
-      gap: 1px;
     }
 
     .bill-row-sublabel {
@@ -964,8 +975,7 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
         <div class="pay-toggle" role="group" aria-label="Payment option">
           <button class="pay-toggle-btn active" id="toggleAdvance" onclick="setPayMode('advance')" type="button">Pay
             Advance</button>
-          <button class="pay-toggle-btn" id="toggleFull" onclick="setPayMode('full')" type="button">Pay in
-            Full</button>
+          <button class="pay-toggle-btn" id="toggleFull" onclick="setPayMode('full')" type="button">Pay in Full</button>
         </div>
       </div>
 
@@ -973,36 +983,46 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
       <div id="sectionBill">
         <p class="section-label">Payment Breakdown</p>
         <div class="bill-card">
+
           <div class="bill-row">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18.438" height="20" fill="none" overflow="visible">
-              <path
-                d="M0 16.25 9.063 20l9.375-4.375V5L9.063 0 5 2.5 0 5.313 5 2.5l8.438 5v3.75V7.5L9.063 9.688V20l9.375-4.375V5L9.063 9.688 0 5.313Z"
-                fill="transparent" stroke-width="2" stroke="#000" stroke-linejoin="round" />
-            </svg>
-            <span class="bill-label">Boot Price (<?= $qty ?>x)</span>
+            <div class="bill-row-left">
+              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="none" overflow="visible">
+                <g fill="transparent">
+                  <path d="M0 15C0 6.716 6.716 0 15 0s15 6.716 15 15-6.716 15-15 15S0 23.284 0 15" />
+                  <path
+                    d="m5.5 21.75 9.063 3.75 9.375-4.375V10.5l-9.375-5L10.5 8l-5 2.813L10.5 8l8.438 5v3.75V13l-4.375 2.188V25.5l9.375-4.375V10.5l-9.375 4.688L5.5 10.813Z"
+                    stroke-width="2" stroke="#000" stroke-linejoin="round" />
+                </g>
+              </svg>
+              <div class="bill-text-group">
+                <span class="bill-label">Boot Price (<?= $qty ?>x)</span>
+              </div>
+            </div>
             <span class="bill-amt">&#8377;
               <?= number_format($total) ?>
             </span>
           </div>
-          <!-- Advance row (advance mode) -->
+
           <div class="bill-row advance-row" id="advanceRow">
-            <div class="bill-row-label-stack"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="none"
-                overflow="visible">
+            <div class="bill-row-left">
+              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="none" overflow="visible">
                 <path d="M15 0c8.284 0 15 6.716 15 15s-6.716 15-15 15S0 23.284 0 15 6.716 0 15 0" fill="#def4e1" />
                 <path
                   d="m10.8 10.2.3-1.5h8.7l-.6 1.5h-2.1s.6.943.6 1.5h2.1l-.6 1.8H18s.304 3-4.5 3c1.357 1.357 4.2 5.4 4.2 5.4h-2.1l-4.8-5.7V15s5.1 1.006 5.1-1.5h-5.4l.6-1.8h4.8s-.225-.825-1.5-1.2-3.6-.3-3.6-.3"
                   fill="#198a42" />
               </svg>
-              <span class="bill-label">Pay Now (Advance) <span class="bill-badge">Due now</span></span>
-              <span class="bill-row-sublabel">Confirm your order by paying now</span>
+              <div class="bill-text-group">
+                <span class="bill-label">Pay Now (Advance) <span class="bill-badge">Due now</span></span>
+                <span class="bill-row-sublabel">Confirm your order by paying now</span>
+              </div>
             </div>
             <span class="bill-amt green" id="advanceAmt">&#8377;
               <?= number_format($advance) ?>
             </span>
           </div>
-          <!-- On delivery row (advance mode) -->
+
           <div class="bill-row delivery-row" id="onDelRow">
-            <div class="bill-row-label-stack">
+            <div class="bill-row-left">
               <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="none" overflow="visible">
                 <path d="M15 0c8.284 0 15 6.716 15 15s-6.716 15-15 15S0 23.284 0 15 6.716 0 15 0" fill="#ccc" />
                 <path
@@ -1011,8 +1031,10 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
                 <path d="M20.4 18.9h2.1V15l-2.4-3.9h-2.7v3.3h4.5-4.5v4.5h-4.5 4.5V9.3H7.5v9.6h2.1" fill="transparent"
                   stroke="#000" stroke-linejoin="round" />
               </svg>
-              <span class="bill-label">Remaining on Delivery</span>
-              <span class="bill-row-sublabel">Payable on delivery (COD)</span>
+              <div class="bill-text-group">
+                <span class="bill-label">Remaining on Delivery</span>
+                <span class="bill-row-sublabel">Payable on delivery (COD)</span>
+              </div>
             </div>
             <span class="bill-amt" id="onDelAmt">&#8377;
               <?= number_format($onDel) ?>
@@ -1026,7 +1048,7 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
             </span>
           </div>
         </div>
-        <!-- Pay-now chip -->
+
         <div class="pay-now-chip" id="payNowChip">
           <div class="pay-now-chip-left">
             <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="none" overflow="visible">
@@ -1044,7 +1066,6 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
                 </g>
               </g>
             </svg>
-
             <div class="pay-now-text-group">
               <span class="pay-now-chip-label">
                 <span id="payNowLabel" style="font-size: 18px;">Pay <span style="font-size: 20px; color: #2ca659;">₹
