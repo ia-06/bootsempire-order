@@ -1260,10 +1260,10 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
       payMode = mode;
       document.getElementById('toggleAdvance').classList.toggle('active', mode === 'advance');
       document.getElementById('toggleFull').classList.toggle('active', mode === 'full');
-
+      
       // Formats the number with the ₹ symbol
       var fmt = function (n) { return '\u20B9' + n.toLocaleString('en-IN'); };
-
+      
       var labelEl = document.getElementById('payNowLabel');
       var subEl = document.getElementById('payNowSubtitle');
 
@@ -1271,11 +1271,11 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
         document.getElementById('advanceRow').style.display = 'none';
         document.getElementById('onDelRow').style.display = 'none';
         document.getElementById('totalAmt').textContent = fmt(TOTAL);
-
+        
         // Use innerHTML to preserve the green styled span
         labelEl.innerHTML = 'Pay <span style="font-size: 20px; color: #2ca659;">' + fmt(TOTAL) + '</span> to Confirm Order';
         if (subEl) {
-          subEl.textContent = 'Secure your order. Pay ' + fmt(TOTAL) + ' now to confirm your order.';
+            subEl.textContent = 'Secure your order. Pay ' + fmt(TOTAL) + ' now to confirm your order.';
         }
       } else {
         document.getElementById('advanceRow').style.display = '';
@@ -1283,12 +1283,12 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
         document.getElementById('advanceAmt').textContent = fmt(ADVANCE);
         document.getElementById('onDelAmt').textContent = fmt(ON_DEL);
         document.getElementById('totalAmt').textContent = fmt(TOTAL);
-
+        
         // Restore default state with advance amount
         labelEl.innerHTML = 'Pay <span style="font-size: 20px; color: #2ca659;">' + fmt(ADVANCE) + '</span> to Confirm Order';
         if (subEl) {
-          // Evaluates the per-item delivery calculation directly inside JS
-          subEl.textContent = 'Secure your order. Pay the remaining ' + fmt(ON_DEL / <?= $qty ?>) + ' on delivery.';
+            // Evaluates the per-item delivery calculation directly inside JS
+            subEl.textContent = 'Secure your order. Pay the remaining ' + fmt(ON_DEL / <?= $qty ?>) + ' on delivery.';
         }
       }
     }
