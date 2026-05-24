@@ -246,27 +246,19 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
     }
 
     .bill-row.total-row {
-      background: var(--surface-2);
+      background: #f8fafc;
       font-weight: 700;
     }
 
     .bill-row.total-row .bill-label {
       color: var(--text-2);
-      font-size: 13px;
+      font-size: 16px;
       font-weight: 600;
     }
 
     .bill-row.total-row .bill-amt {
       color: var(--text);
       font-size: 16px;
-    }
-
-    .bill-row.advance-row {
-      background: #f0fdf4;
-    }
-
-    .bill-row.delivery-row {
-      background: var(--surface);
     }
 
     .bill-label {
@@ -305,33 +297,41 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
       font-weight: 500;
     }
 
-    /* Pay-now chip */
+    /* Updated Pay Now Chip UI */
     .pay-now-chip {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      padding: 14px 18px;
-      background: #f8fafc;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      margin-top: 10px;
+      align-items: center;
+      background: #f0fdf4;
+      border: 1.5px solid #c2dac9;
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 16px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+      transition: all 0.2s ease;
+    }
+
+    .pay-now-chip-left {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
     }
 
     .pay-now-chip-label {
       display: flex;
       align-items: center;
       gap: 8px;
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--text-2);
+      font-size: 14.5px;
+      font-weight: 600;
+      color: #0f172a;
+      margin-left: 30px;
     }
 
-    .pay-now-chip-amt {
-      font-size: 20px;
-      font-weight: 800;
-      color: var(--text);
-      font-variant-numeric: tabular-nums;
-      letter-spacing: -0.02em;
+    .pay-now-chip-subtitle {
+      font-size: 12px;
+      color: #64748b;
+      margin-left: 30px;
+      /* Aligns text with the label, bypassing the SVG icon */
     }
 
     /* Form fields */
@@ -941,7 +941,9 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
       <!-- Validity badge -->
       <div>
         <div class="validity-badge">
-          Order valid for <?= $qty ?> Boot<?= $qty > 1 ? 's' : '' ?>
+          Order valid for
+          <?= $qty ?> Boot
+          <?= $qty > 1 ? 's' : '' ?>
         </div>
       </div>
 
@@ -951,7 +953,8 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
         <div class="pay-toggle" role="group" aria-label="Payment option">
           <button class="pay-toggle-btn active" id="toggleAdvance" onclick="setPayMode('advance')" type="button">Pay
             Advance</button>
-          <button class="pay-toggle-btn" id="toggleFull" onclick="setPayMode('full')" type="button">Pay in Full</button>
+          <button class="pay-toggle-btn" id="toggleFull" onclick="setPayMode('full')" type="button">Pay in
+            Full</button>
         </div>
       </div>
 
@@ -960,48 +963,74 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
         <p class="section-label">Payment Breakdown</p>
         <div class="bill-card">
           <div class="bill-row">
-            <span class="bill-label">Price for boots (x<?= $qty ?>)</span>
-            <span class="bill-amt">&#8377;<?= number_format($total) ?></span>
-          </div>
-          <!-- On delivery row (advance mode) -->
-          <div class="bill-row delivery-row" id="onDelRow">
-            <div class="bill-row-label-stack">
-              <span class="bill-label">Pay on Delivery (Remaining)</span>
-              <span class="bill-row-sublabel">&#8377;<?= number_format($onDel / $qty) ?> &times; <?= $qty ?>
-                boot<?= $qty > 1 ? 's' : '' ?></span>
-            </div>
-            <span class="bill-amt" id="onDelAmt">&#8377;<?= number_format($onDel) ?></span>
+            <span class="bill-label">Boot Price (
+              <?= $qty ?>x)
+            </span>
+            <span class="bill-amt">&#8377;
+              <?= number_format($total) ?>
+            </span>
           </div>
           <!-- Advance row (advance mode) -->
           <div class="bill-row advance-row" id="advanceRow">
             <div class="bill-row-label-stack">
               <span class="bill-label">Pay Now (Advance) <span class="bill-badge">Due now</span></span>
-              <span class="bill-row-sublabel">&#8377;<?= number_format($advance / $qty) ?> &times; <?= $qty ?>
-                boot<?= $qty > 1 ? 's' : '' ?></span>
+              <span class="bill-row-sublabel">Confirm your order by paying now</span>
             </div>
-            <span class="bill-amt green" id="advanceAmt">&#8377;<?= number_format($advance) ?></span>
+            <span class="bill-amt green" id="advanceAmt">&#8377;
+              <?= number_format($advance) ?>
+            </span>
           </div>
+          <!-- On delivery row (advance mode) -->
+          <div class="bill-row delivery-row" id="onDelRow">
+            <div class="bill-row-label-stack">
+              <span class="bill-label">Remaining on Delivery</span>
+              <span class="bill-row-sublabel">Payable on delivery (COD)</span>
+            </div>
+            <span class="bill-amt" id="onDelAmt">&#8377;
+              <?= number_format($onDel) ?>
+            </span>
+          </div>
+
           <div class="bill-row total-row">
             <span class="bill-label">Total</span>
-            <span class="bill-amt" id="totalAmt">&#8377;<?= number_format($total) ?></span>
+            <span class="bill-amt" id="totalAmt">&#8377;
+              <?= number_format($total) ?>
+            </span>
           </div>
         </div>
         <!-- Pay-now chip -->
         <div class="pay-now-chip" id="payNowChip">
-          <span class="pay-now-chip-label">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <polyline points="20 6 9 17 4 12" />
+          <div class="pay-now-chip-left">
+            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="none" overflow="visible">
+              <g>
+                <path
+                  d="M 25 0 C 38.807 0 50 11.193 50 25 C 50 38.807 38.807 50 25 50 C 11.193 50 0 38.807 0 25 C 0 11.193 11.193 0 25 0 Z"
+                  fill="rgb(220, 243, 223)"></path>
+                <g transform="translate(16.071 13.571)">
+                  <path
+                    d="M 0 2.857 C 0 2.857 2.411 2.857 4.643 2.143 C 6.875 1.429 8.929 0 8.929 0 C 8.929 0 11.339 1.451 13.571 2.143 C 15.804 2.835 17.5 2.857 17.5 2.857 L 17.5 15 C 17.5 15 15.714 17.232 13.571 18.929 C 11.429 20.625 8.929 21.786 8.929 21.786 C 8.929 21.786 6.518 20.625 4.286 18.929 C 2.054 17.232 0 15 0 15 Z"
+                    fill="transparent" stroke-width="3" stroke="rgb(47, 148, 84)" stroke-linecap="round"
+                    stroke-linejoin="round"></path>
+                  <path d="M 5.714 10 L 8.333 12.857 L 13.214 8.571" fill="transparent" stroke-width="2"
+                    stroke="rgb(47, 148, 84)" stroke-linecap="round"></path>
+                </g>
+              </g>
             </svg>
-            <span id="payNowLabel">Amount to pay now (advance)</span>
-          </span>
-          <span class="pay-now-chip-amt" id="payNowAmt">&#8377;<?= number_format($advance) ?></span>
+            <span class="pay-now-chip-label">
+              <span id="payNowLabel" style="font-size: 18px;">Pay <span style="font-size: 20px; color: #2ca659;">₹
+                  <?= number_format($advance) ?>
+                </span> to Confirm Order</span>
+            </span>
+            <span class="pay-now-chip-subtitle">Secure your order. Pay the remaining ₹
+              <?= number_format($onDel / $qty) ?> on delivery.
+            </span>
+          </div>
         </div>
       </div>
 
       <!-- QR + UPI -->
       <div id="sectionQr">
-        <p class="section-label">Scan &amp; Pay</p>
+        <p class="section-label">Pay Securely Via UPI</p>
         <div class="pay-card">
           <div class="pay-card-qr">
             <div class="qr-placeholder" id="qrPlaceholder">
@@ -1082,8 +1111,10 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
       </div>
       <div>
         <h2 class="delivery-title">Delivery Timeline</h2>
-        <p class="delivery-sub">Please note that the estimated delivery time for all custom boots is between <strong>15
-            to 20 days</strong>. By proceeding, you acknowledge and agree to this timeline.</p>
+        <p class="delivery-sub">Please note that the estimated delivery time for all custom boots is between
+          <strong>15
+            to 20 days</strong>. By proceeding, you acknowledge and agree to this timeline.
+        </p>
       </div>
       <div class="delivery-actions">
         <button class="btn-primary" id="confirmOrderBtn" onclick="processOrder()">I agree - Continue</button>
@@ -1101,7 +1132,8 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
       <h2 class="success-title">Order placed!</h2>
       <div class="success-card">
         <p class="success-card-title">NEXT STEPS</p>
-        <p style="font-size:14px;color:var(--text-2);line-height:1.65;">Send payment proof to our employee and we will
+        <p style="font-size:14px;color:var(--text-2);line-height:1.65;">Send payment proof to our employee and
+          we will
           confirm your order upon verification.</p>
         <div style="margin-top:14px">
           <a id="channelBtn" href="#" target="_blank" rel="noopener noreferrer" class="channel-btn whatsapp">
