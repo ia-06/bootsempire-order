@@ -362,62 +362,52 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
       line-height: 1.4;
     }
 
-    /* Redesigned Trust Features Card (Premium & Globally Compliant) */
+    /* Redesigned Trust Features Card (Stacked Text & Responsive) */
     .trust-features-card {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: var(--bg);
+      background: #f0fdf4;
       border: 1px solid var(--border);
       border-radius: var(--radius-lg);
-      padding: 14px 16px;
+      padding: 14px 8px;
       margin-top: 16px;
-      /* Enforces the exact 16px gap matching image_000280.png */
-      gap: 12px;
+      gap: 4px;
     }
 
     .trust-item {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 6px;
       flex: 1;
     }
 
     .trust-item svg {
       color: #16a34a;
-      /* Premium crisp emerald trust green */
       flex-shrink: 0;
     }
 
-    .trust-item span {
-      font-size: 12px;
-      /* Matches standard bill breakdown label typography */
-      font-weight: 600;
+    /* New container to stack the two text lines */
+    .trust-item-text {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+    }
+
+    .trust-item-text span {
+      font-size: 10.5px;
+      font-weight: 700;
       color: var(--text-2);
-      line-height: 1.2;
+      line-height: 1.15;
       white-space: nowrap;
     }
 
-    /* Seamless mobile responsiveness scaling */
-    @media (max-width: 480px) {
-      .trust-features-card {
-        padding: 12px 6px;
-        gap: 4px;
-      }
-
-      .trust-item {
-        gap: 4px;
-      }
-
-      .trust-item span {
-        font-size: 10px;
-      }
-
-      .trust-item svg {
-        width: 16px;
-        height: 16px;
-      }
+    .trust-item-text span.trust-sub {
+      font-weight: 500;
+      color: var(--text-m);
+      margin-top: 1px;
     }
 
     /* Form fields */
@@ -1273,35 +1263,51 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
         </div>
 
         <div class="trust-features-card">
+
           <div class="trust-item">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-              <path d="m9 11 2 2 4-4"></path>
+            <svg xmlns="http://www.w3.org/2000/svg" width="27.27" height="20" fill="none" overflow="visible">
+              <g fill="transparent" stroke="#2f9454">
+                <path
+                  d="M20.545 14.544a2.728 2.728 0 1 1-.001 5.455 2.728 2.728 0 0 1 .001-5.455Zm-14.18 0a2.729 2.729 0 1 1-.004 5.458 2.729 2.729 0 0 1 .004-5.458Z"
+                  stroke-miterlimit="10" />
+                <path
+                  d="M23.452 17.453h3.818v-7.09l-4.363-7.091h-4.909v6h8.181-8.181v8.181H9.817h8.181V0H0v17.453h3.818"
+                  stroke-linejoin="round" />
+              </g>
             </svg>
-            <span>Best Quality Assured</span>
+            <div class="trust-item-text">
+              <span>Best Quality</span>
+              <span class="trust-sub">Assured</span>
+            </div>
           </div>
 
           <div class="trust-item">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="1" y="3" width="15" height="13"></rect>
-              <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
-              <circle cx="5.5" cy="18.5" r="2.5"></circle>
-              <circle cx="18.5" cy="18.5" r="2.5"></circle>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" overflow="visible">
+              <path
+                d="M3.955 16.029 5.245 20l1.995-1.958-.348-2.325 5.878-5.213 2.995 9.03.999-1.56V6.022S21.428 2.266 19.558.43 13.97 3.226 13.97 3.226H2.22l-1.601.987 8.859 2.996-5.22 5.872-2.286-.311L0 14.728Z"
+                fill="transparent" stroke="#2f9454" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
-            <span>Delivery Across India</span>
+            <div class="trust-item-text">
+              <span>Delivery</span>
+              <span class="trust-sub">Across India</span>
+            </div>
           </div>
 
           <div class="trust-item">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="23 4 23 10 17 10"></polyline>
-              <polyline points="1 20 1 14 7 14"></polyline>
-              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" overflow="visible">
+              <g fill="transparent" stroke="#2f9454" stroke-linecap="round" stroke-linejoin="round">
+                <path
+                  d="M16.585 5.469H20V2.051v3.418s-2.659-2.791-4.878-4.102C12.903.057 11.123-.001 10.244 0 8.487.002 2.468.531 0 7.968m3.415 6.563H0v3.418-3.418s2.659 2.791 4.878 4.102c2.219 1.31 3.999 1.368 4.878 1.367 1.757-.002 7.776-.531 10.244-7.968" />
+                <path
+                  d="M6.341 7.52v4.557l3.903 1.595L14 12V7.5l-3.756-2.031L14 7.5l-3.756 1.615v4.557-4.557zl3.903-2.051Z" />
+              </g>
             </svg>
-            <span>Easy Returns/Exchange</span>
+            <div class="trust-item-text">
+              <span>Easy Returns &</span>
+              <span class="trust-sub">Size Exchange</span>
+            </div>
           </div>
+
         </div>
       </div>
 
