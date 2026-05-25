@@ -353,6 +353,50 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
       /* Controls spacing between the title and subtitle line row */
     }
 
+    /* --- Reservation & Shipping Banner Styling Rules --- */
+    .reservation-chip {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #F5FAF6;
+      border: 1.5px solid #c2dac9;
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 16px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+    }
+
+    .reservation-chip-left {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      /* Centers the Timer SVG icon with the combined text group block */
+      gap: 14px;
+    }
+
+    .reservation-text-group {
+      display: flex;
+      flex-direction: column;
+      /* Vertical text stack configuration */
+      gap: 3px;
+    }
+
+    .reservation-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #0f172a;
+      /* Dark theme success-text alignment */
+      line-height: 1.2;
+    }
+
+    .reservation-subtitle {
+      font-size: 12px;
+      font-weight: 400;
+      color: #475569;
+      /* Balanced slate description tone */
+      line-height: 1.2;
+    }
+
     /* Keep or update your existing inner subtitle layout parameters cleanly */
     .pay-now-chip-subtitle {
       font-size: 13px;
@@ -997,7 +1041,7 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
                 </g>
               </svg>
               <div class="bill-text-group">
-                <span class="bill-label">Boot Price (<?= $qty ?>×)</span>
+                <span class="bill-label"><strong>Boot Price (<?= $qty ?>×)</strong></span>
               </div>
             </div>
             <span class="bill-amt">&#8377;<?= number_format($bootTotal) ?></span>
@@ -1012,7 +1056,7 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
                     stroke-linecap="round" />
                 </svg>
                 <div class="bill-text-group">
-                  <span class="bill-label">Custom Add-ons</span>
+                  <span class="bill-label"><strong>Custom Add-ons</span></strong>
                 </div>
               </div>
               <span class="bill-amt">&#8377;<?= number_format($addons) ?></span>
@@ -1028,7 +1072,8 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
                   fill="#198a42" />
               </svg>
               <div class="bill-text-group">
-                <span class="bill-label">Pay Now (Advance) <span class="bill-badge">Due now</span></span>
+                <span class="bill-label"><strong>Pay Now (Advance) </strong><span class="bill-badge">Due
+                    now</span></span>
                 <span class="bill-row-sublabel">Confirm your order by paying now</span>
               </div>
             </div>
@@ -1046,7 +1091,7 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
                   stroke="#000" stroke-linejoin="round" />
               </svg>
               <div class="bill-text-group">
-                <span class="bill-label">Remaining on Delivery</span>
+                <span class="bill-label"><strong>Remaining on Delivery</strong></span>
                 <span class="bill-row-sublabel">Payable on delivery (COD)</span>
               </div>
             </div>
@@ -1090,6 +1135,24 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
         </div>
       </div>
 
+      <div class="reservation-chip">
+        <div class="reservation-chip-left">
+          <svg xmlns="http://www.w3.org/2000/svg" width="26.471" height="30" fill="none" overflow="visible">
+            <path d="m19.412 23.75 2.132 2.132 4.265-4.264M12.353 11.471v5.735l3.529 3.529" fill="transparent"
+              stroke-width="3" stroke="#2f9454" stroke-linecap="round" />
+            <path
+              d="M13.235 3.529c7.31 0 13.236 5.926 13.236 13.236q-.001 1.065-.164 2.086a6.6 6.6 0 0 0-2.472-.308q.135-.833.136-1.705c0-5.888-4.774-10.662-10.662-10.662S2.647 10.95 2.647 16.838 7.42 27.5 13.309 27.5c1.6 0 3.118-.352 4.48-.984.174.83.504 1.602.958 2.285A13.2 13.2 0 0 1 13.235 30C5.926 30 0 24.074 0 16.765 0 9.455 5.926 3.529 13.235 3.529"
+              fill="#2f9454" />
+            <path d="M9.706 0h7.059" fill="transparent" stroke-width="3" stroke="#2f9454" stroke-linecap="round" />
+          </svg>
+          <div class="reservation-text-group">
+            <span class="reservation-title">Your pair is reserved for the next 30 minutes.</span>
+            <span class="reservation-subtitle">Next import shipment leaving soon. Order now to get yours in 8 - 10
+              days!</span>
+          </div>
+        </div>
+      </div>
+
       <!-- QR + UPI -->
       <div id="sectionQr">
         <p class="section-label">Pay Securely Via UPI</p>
@@ -1121,9 +1184,13 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
               SECURELY</span>
             <span
               style="display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: var(--success);">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              <svg xmlns="http://www.w3.org/2000/svg" width="12.049" height="15" fill="none" overflow="visible">
+                <g fill="transparent" stroke-width="2" stroke="#2f9454" stroke-linecap="round">
+                  <path
+                    d="M0 1.967s1.66 0 3.197-.492C4.734.984 6.148 0 6.148 0s1.659.999 3.196 1.475 2.705.492 2.705.492v8.361s-1.23 1.537-2.705 2.705S6.148 15 6.148 15s-1.66-.799-3.197-1.967S0 10.328 0 10.328Z"
+                    stroke-linejoin="round" />
+                  <path d="m3.934 6.885 1.803 1.967 3.361-2.951" stroke-miterlimit="10" />
+                </g>
               </svg>
               100% Secure Payment
             </span>
@@ -1174,8 +1241,7 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
       <div>
         <h2 class="delivery-title">Delivery Timeline</h2>
         <p class="delivery-sub">Please note that the estimated delivery time for all custom boots is between
-          <strong>15
-            to 20 days</strong>. By proceeding, you acknowledge and agree to this timeline.
+          <strong>8 - 10 days</strong>. By proceeding, you acknowledge and agree to this timeline.
         </p>
       </div>
       <div class="delivery-actions">
