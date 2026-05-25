@@ -1767,6 +1767,10 @@ session_start();
                 <input class="inp" id="sUpiId" type="text" placeholder="yourname@upi">
               </div>
               <div class="field-row">
+                <label>UPI Number / Phone Number</label>
+                <input class="inp" id="sUpiNumber" type="text" placeholder="e.g. 9876543210">
+              </div>
+              <div class="field-row">
                 <label>QR Code Image</label>
                 <div class="qr-dropzone" id="qrDropzone" role="button" tabindex="0" onclick="handleDropzoneClick(event)"
                   onkeydown="if(event.key==='Enter'||event.key===' ')handleDropzoneClick(event)"
@@ -2205,6 +2209,7 @@ session_start();
         .then(function (r) { return r.json(); })
         .then(function (d) {
           if (d.upiId !== undefined) document.getElementById('sUpiId').value = d.upiId;
+          if (d.upiNumber !== undefined) document.getElementById('sUpiNumber').value = d.upiNumber;
           if (d.totalPrice !== undefined) document.getElementById('sTotalPrice').value = d.totalPrice;
           if (d.advanceAmount !== undefined) document.getElementById('sAdvance').value = d.advanceAmount;
           if (d.whatsappLink !== undefined) document.getElementById('sWaLink').value = d.whatsappLink;
@@ -2255,6 +2260,7 @@ session_start();
       e.preventDefault();
       var fd = new FormData();
       fd.append('upiId', document.getElementById('sUpiId').value.trim());
+      fd.append('upiNumber', document.getElementById('sUpiNumber').value.trim());
       fd.append('totalPrice', document.getElementById('sTotalPrice').value);
       fd.append('advanceAmount', document.getElementById('sAdvance').value);
       fd.append('addonsPrice', document.getElementById('sAddons').value);

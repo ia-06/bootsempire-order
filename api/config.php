@@ -28,6 +28,12 @@ try {
     $pdo->exec("ALTER TABLE `order_links` ADD COLUMN `addons_price` INT UNSIGNED NOT NULL DEFAULT 0");
 } catch (Exception $e) {
 }
+
+try {
+    $pdo->exec("ALTER TABLE `config` ADD COLUMN `upi_number` VARCHAR(32) NOT NULL DEFAULT ''");
+} catch (Exception $e) {
+}
+
 // ----------------------------------------------------------------------
 
 // Helper to safely get config values
@@ -78,6 +84,7 @@ if ($method === 'GET') {
             'totalPrice' => (int) $link['total_price'],
             'advanceAmount' => (int) $link['advance_amount'],
             'upiId' => $cfg['upi_id'],
+            'upiNumber' => $cfg['upi_number'] ?? '',
             'qrDataUrl' => $qrUrl,
             'whatsappLink' => $cfg['whatsapp_link'] ?? '',
             'instagramLink' => $cfg['instagram_link'] ?? ''
@@ -98,6 +105,7 @@ if ($method === 'GET') {
 
     $response = [
         'upiId' => $cfg['upi_id'],
+        'upiNumber' => $cfg['upi_number'] ?? '',
         'qrImageUrl' => $qrUrl,
         'totalPrice' => (int) $cfg['total_price'],
         'advanceAmount' => (int) $cfg['advance_amount'],
@@ -181,6 +189,7 @@ if ($method === 'POST') {
     $channel = $_SESSION['admin_channel'];
     $existing = getConfig($pdo, $channel);
     $upiId = trim($_POST['upiId'] ?? $existing['upi_id'] ?? '');
+    $upiNumber = trim($_POST['upiNumber'] ?? $existing['upi_number'] ?? '');
     $totalPrice = (int) ($_POST['totalPrice'] ?? $existing['total_price'] ?? 6700);
     $advanceAmount = (int) ($_POST['advanceAmount'] ?? $existing['advance_amount'] ?? 2700);
     $addonsPrice = (int) ($_POST['addonsPrice'] ?? $existing['addons_price'] ?? 0);
@@ -209,8 +218,8 @@ if ($method === 'POST') {
         $qrImage = null;
     }
 
-    $stmt = $pdo->prepare('UPDATE `config` SET upi_id=?, qr_image=?, total_price=?, advance_amount=?, addons_price=?, whatsapp_link=?, instagram_link=? WHERE id=?');
-    $stmt->execute([$upiId, $qrImage, $totalPrice, $advanceAmount, $addonsPrice, $whatsappLink, $instagramLink, $channel]);
+    $stmt = $pdo->prepare('UPDATE `config` SET upi_id=?, upi_number=?, qr_image=?, total_price=?, advance_amount=?, addons_price=?, whatsapp_link=?, instagram_link=? WHERE id=?');
+    $stmt->execute([$upiId, $upiNumber, $qrImage, $totalPrice, $advanceAmount, $addonsPrice, $whatsappLink, $instagramLink, $channel]);
 
     echo json_encode(['ok' => true]);
     exit;

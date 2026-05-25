@@ -1178,6 +1178,14 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
             <button class="copy-btn" onclick="copyUpi()" type="button">Copy</button>
           </div>
 
+          <div class="pay-card-upi" style="border-top: 1px solid var(--border); padding-top: 12px;">
+            <div>
+              <p class="upi-label">UPI Number</p>
+              <p class="upi-id" id="upiNumberText">Loading&hellip;</p>
+            </div>
+            <button class="copy-btn" onclick="copyUpiNumber(this)" type="button">Copy</button>
+          </div>
+
           <div
             style="display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; border-top: 1px solid var(--border); background: var(--surface);">
             <span style="font-size: 11px; font-weight: 800; letter-spacing: 0.08em; color: var(--text-2);">PAY
@@ -1290,6 +1298,7 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
     var ON_DEL = <?= $onDel ?>;
 
     var upiId = '';
+    var upiNumber = '';
     var whatsappLink = '';
     var instagramLink = '';
     var payMode = 'advance';
@@ -1302,9 +1311,14 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
         .then(function (r) { return r.json(); })
         .then(function (d) {
           upiId = d.upiId || '';
+          upiNumber = d.upiNumber || ''; // Captures value from backend JSON payload safely
           whatsappLink = d.whatsappLink || '';
           instagramLink = d.instagramLink || '';
+
+          // Push both values to their respective HTML elements dynamically
           document.getElementById('upiIdText').textContent = upiId || 'N/A';
+          document.getElementById('upiNumberText').textContent = upiNumber || 'N/A';
+
           if (d.qrDataUrl) {
             var img = document.getElementById('qrImg');
             img.src = d.qrDataUrl;
@@ -1320,19 +1334,20 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
             btn.href = whatsappLink;
             btn.className = 'channel-btn whatsapp';
             btnt.textContent = 'Contact us on WhatsApp';
-            // Set WhatsApp SVG Content
             iconSvg.setAttribute('viewBox', '0 0 24 24');
             iconSvg.innerHTML = '<path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.534 5.857L0 24l6.335-1.51A11.95 11.95 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 0 1-5.007-1.369l-.36-.213-3.724.888.925-3.63-.234-.374A9.818 9.818 0 1 1 12 21.818z"/>';
           } else if (CHANNEL === 'instagram' && instagramLink) {
             btn.href = instagramLink;
             btn.className = 'channel-btn instagram';
             btnt.textContent = 'Contact us on Instagram';
-            // Set High-Quality Instagram Camera Glyph SVG Content
             iconSvg.setAttribute('viewBox', '0 0 24 24');
             iconSvg.innerHTML = '<path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>';
           }
         })
-        .catch(function () { document.getElementById('upiIdText').textContent = 'Failed to load'; });
+        .catch(function () {
+          document.getElementById('upiIdText').textContent = 'Failed to load';
+          document.getElementById('upiNumberText').textContent = 'Failed to load';
+        });
     }
 
     function setPayMode(mode) {
@@ -1421,6 +1436,16 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
       navigator.clipboard.writeText(upiId).then(function () {
         var btn = document.querySelector('.copy-btn');
         if (btn) { btn.textContent = 'Copied!'; setTimeout(function () { btn.textContent = 'Copy'; }, 2000); }
+      });
+    }
+
+    function copyUpiNumber(btn) {
+      if (!upiNumber) return;
+      navigator.clipboard.writeText(upiNumber).then(function () {
+        if (btn) {
+          btn.textContent = 'Copied!';
+          setTimeout(function () { btn.textContent = 'Copy'; }, 2000);
+        }
       });
     }
 
