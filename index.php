@@ -2419,7 +2419,10 @@ session_start();
 
       var bootQty = parseInt(o.qty) || 1;
       var addonsPrice = parseInt(o.addons_price) || 0;
-      var totalBootsPrice = (parseInt(o.total_price) || 0) * bootQty;
+
+      // FIX: Removed '* bootQty' because o.total_price already contains the multiplied total from the database
+      var totalBootsPrice = parseInt(o.total_price) || 0;
+
       var paidAmt = parseInt(o.paid_amount) || 0;
       var grandTotal = totalBootsPrice + addonsPrice;
       var remaining = Math.max(0, grandTotal - paidAmt);
