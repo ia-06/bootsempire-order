@@ -2154,15 +2154,21 @@ session_start();
 
     function generateLink() {
       var qty = Math.max(1, parseInt(document.getElementById('genQty').value) || 1);
-      var total = Math.max(0, parseInt(document.getElementById('genTotal').value) || 0);
-      var adv = Math.max(0, parseInt(document.getElementById('genAdvance').value) || 0);
+      var totalPerBoot = Math.max(0, parseInt(document.getElementById('genTotal').value) || 0);
+      var advPerBoot = Math.max(0, parseInt(document.getElementById('genAdvance').value) || 0);
       var addons = Math.max(0, parseInt(document.getElementById('genAddons').value) || 0);
+
+      // FIX: Multiply unit price by quantity before sending to backend database
+      var total = totalPerBoot * qty;
+      var adv = advPerBoot * qty;
+
       var errEl = document.getElementById('genErr');
       var resEl = document.getElementById('genResult');
       errEl.style.display = 'none';
       resEl.style.display = 'none';
       var btn = document.getElementById('genBtn');
       btn.disabled = true; btn.textContent = 'Generating\u2026';
+
       fetch('api/links.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -2462,13 +2468,21 @@ session_start();
     }
 
     // ---- Link Detail Overlay ----
+    // ---- Link Detail Overlay ----
     function openLinkDetail(l) {
       var url = HOST + '/' + l.slug;
       var qty = parseInt(l.qty) || 1;
-      var total = parseInt(l.total_price) || parseInt(l.price_per_boot) || 0;
-      var advance = parseInt(l.advance_amount) || parseInt(l.advance_per_boot) || 0;
+
+      // Calculate true values based on accurate DB strings
+      var totalAll = parseInt(l.total_price) || 0;
+      var advanceAll = parseInt(l.advance_amount) || 0;
       var addons = parseInt(l.addons_price) || 0;
-      var delivery = Math.max(0, total - advance);
+
+      var totalPerBoot = totalAll / qty;
+      var advPerBoot = advanceAll / qty;
+      var grandTotal = totalAll + addons;
+      var deliveryAll = Math.max(0, grandTotal - advanceAll);
+
       var date = l.link_created_at ? l.link_created_at.slice(0, 10) : '\u2014';
       var orderCount = parseInt(l.order_count) || 0;
       var fmt = function (n) { return '\u20B9' + n.toLocaleString('en-IN'); };
@@ -2490,10 +2504,10 @@ session_start();
         '<div class="od-info-card">' +
         '<div class="od-info-grid">' +
         '<div class="od-kv"><span class="od-kv-label">Qty (boots)</span><span class="od-kv-val">' + qty + '</span></div>' +
-        '<div class="od-kv"><span class="od-kv-label">Total / boot</span><span class="od-kv-val">' + fmt(total) + '</span></div>' +
-        '<div class="od-kv"><span class="od-kv-label">Advance / boot</span><span class="od-kv-val">' + fmt(advance) + '</span></div>' +
-        '<div class="od-kv"><span class="od-kv-label">On delivery / boot</span><span class="od-kv-val">' + fmt(delivery) + '</span></div>' +
+        '<div class="od-kv"><span class="od-kv-label">Total / boot</span><span class="od-kv-val">' + fmt(totalPerBoot) + '</span></div>' +
+        '<div class="od-kv"><span class="od-kv-label">Advance / boot</span><span class="od-kv-val">' + fmt(advPerBoot) + '</span></div>' +
         '<div class="od-kv"><span class="od-kv-label">Add-ons Price</span><span class="od-kv-val">' + (addons > 0 ? fmt(addons) : '<span class="muted">\u2014</span>') + '</span></div>' +
+        '<div class="od-kv"><span class="od-kv-label">On delivery (Total)</span><span class="od-kv-val">' + fmt(deliveryAll) + '</span></div>' +
         '<div class="od-kv"><span class="od-kv-label">Orders received</span><span class="od-kv-val">' + orderCount + '</span></div>' +
         '</div>' +
         '</div>' +
@@ -2509,7 +2523,6 @@ session_start();
         '</div>';
 
       body.innerHTML = configHtml + urlHtml;
-
       document.getElementById('odBackdrop').classList.add('open');
     }
 

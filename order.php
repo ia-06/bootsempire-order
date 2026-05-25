@@ -22,9 +22,12 @@ if (!$row) {
 
 $channel = $row['channel'] ?? 'instagram';
 $qty = (int) ($row['qty'] ?? 1);
-$total = (int) ($row['total_price'] ?? 6700);
+$bootTotal = (int) ($row['total_price'] ?? 6700);
+$addons = (int) ($row['addons_price'] ?? 0);
 $advance = (int) ($row['advance_amount'] ?? 2700);
-$onDel = $total - $advance;
+
+$grandTotal = $bootTotal + $addons;
+$onDel = $grandTotal - $advance;
 $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
 ?>
 <!DOCTYPE html>
@@ -997,10 +1000,24 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
                 <span class="bill-label">Boot Price (<?= $qty ?>×)</span>
               </div>
             </div>
-            <span class="bill-amt">&#8377;
-              <?= number_format($total) ?>
-            </span>
+            <span class="bill-amt">&#8377;<?= number_format($bootTotal) ?></span>
           </div>
+
+          <?php if ($addons > 0): ?>
+            <div class="bill-row">
+              <div class="bill-row-left">
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="none" overflow="visible">
+                  <path d="M15 0c8.284 0 15 6.716 15 15s-6.716 15-15 15S0 23.284 0 15 6.716 0 15 0" fill="#fef3c7" />
+                  <path d="M15 8v14M8 15h14" fill="transparent" stroke-width="2.5" stroke="#d97706"
+                    stroke-linecap="round" />
+                </svg>
+                <div class="bill-text-group">
+                  <span class="bill-label">Custom Add-ons</span>
+                </div>
+              </div>
+              <span class="bill-amt">&#8377;<?= number_format($addons) ?></span>
+            </div>
+          <?php endif; ?>
 
           <div class="bill-row advance-row" id="advanceRow">
             <div class="bill-row-left">
@@ -1015,9 +1032,7 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
                 <span class="bill-row-sublabel">Confirm your order by paying now</span>
               </div>
             </div>
-            <span class="bill-amt green" id="advanceAmt">&#8377;
-              <?= number_format($advance) ?>
-            </span>
+            <span class="bill-amt green" id="advanceAmt">&#8377;<?= number_format($advance) ?></span>
           </div>
 
           <div class="bill-row delivery-row" id="onDelRow">
@@ -1035,16 +1050,12 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
                 <span class="bill-row-sublabel">Payable on delivery (COD)</span>
               </div>
             </div>
-            <span class="bill-amt" id="onDelAmt">&#8377;
-              <?= number_format($onDel) ?>
-            </span>
+            <span class="bill-amt" id="onDelAmt">&#8377;<?= number_format($onDel) ?></span>
           </div>
 
           <div class="bill-row total-row">
             <span class="bill-label">Total</span>
-            <span class="bill-amt" id="totalAmt">&#8377;
-              <?= number_format($total) ?>
-            </span>
+            <span class="bill-amt" id="totalAmt">&#8377;<?= number_format($grandTotal) ?></span>
           </div>
         </div>
 
@@ -1067,12 +1078,12 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
             </svg>
             <div class="pay-now-text-group">
               <span class="pay-now-chip-label">
-                <span id="payNowLabel" style="font-size: 18px;">Pay <span style="font-size: 20px; color: #2ca659;">₹
-                    <?= number_format($advance) ?>
+                <span id="payNowLabel" style="font-size: 18px;">Pay <span
+                    style="font-size: 20px; color: #2ca659;">₹<?= number_format($advance) ?>
                   </span> to Confirm Order</span>
               </span>
-              <span class="pay-now-chip-subtitle" id="payNowSubtitle">Secure your order. Pay the remaining ₹
-                <?= number_format($onDel / $qty) ?> on delivery.
+              <span class="pay-now-chip-subtitle" id="payNowSubtitle">Secure your order. Pay the remaining
+                ₹<?= number_format($onDel) ?> on delivery.
               </span>
             </div>
           </div>
@@ -1206,7 +1217,9 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
     var SLUG = '<?= $slugSafe ?>';
     var CHANNEL = '<?= htmlspecialchars($channel, ENT_QUOTES) ?>';
     var QTY = <?= $qty ?>;
-    var TOTAL = <?= $total ?>;
+    var BOOT_TOTAL = <?= $bootTotal ?>;
+    var ADDONS = <?= $addons ?>;
+    var TOTAL = <?= $grandTotal ?>;
     var ADVANCE = <?= $advance ?>;
     var ON_DEL = <?= $onDel ?>;
 
@@ -1287,8 +1300,8 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
         // Restore default state with advance amount
         labelEl.innerHTML = 'Pay <span style="font-size: 20px; color: #2ca659;">' + fmt(ADVANCE) + '</span> to Confirm Order';
         if (subEl) {
-          // Evaluates the per-item delivery calculation directly inside JS
-          subEl.textContent = 'Secure your order. Pay the remaining ' + fmt(ON_DEL / <?= $qty ?>) + ' on delivery.';
+          // Evaluates the total delivery calculation directly inside JS
+          subEl.textContent = 'Secure your order. Pay the remaining ' + fmt(ON_DEL) + ' on delivery.';
         }
       }
     }
