@@ -311,96 +311,113 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
       font-weight: 500;
     }
 
-    /* Updated Pay Now Chip UI */
-    .pay-now-chip {
+    /* Unified Mobile-Optimized Cards (Following Global Style Guidelines) */
+    .pay-now-chip,
+    .reservation-chip {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
       background: #f0fdf4;
-      border: 1.5px solid #c2dac9;
-      border-radius: 12px;
-      padding: 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 14px 20px;
+      /* Matches bill-row padding perfectly */
       margin-top: 16px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+      box-shadow: none;
       transition: all 0.2s ease;
     }
 
-    .pay-now-chip-left {
-      display: flex;
-      flex-direction: row;
-      /* Force layout content to position in a row row line */
-      align-items: center;
-      /* Force the SVG and Text stack to align perfectly on the vertical axis */
-      gap: 10px;
-      /* Adds clean spacing between the SVG icon and the text text box block */
-    }
-
-    .pay-now-chip-label {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 14.5px;
-      font-weight: 600;
-      color: #0f172a;
-    }
-
-    /* Added text group wrapper styling rules */
-    .pay-now-text-group {
-      display: flex;
-      flex-direction: column;
-      /* Keeps the label above the subtitle message */
-      gap: 2px;
-      /* Controls spacing between the title and subtitle line row */
-    }
-
-    /* --- Reservation & Shipping Banner Styling Rules --- */
-    .reservation-chip {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #F5FAF6;
-      border: 1.5px solid #c2dac9;
-      border-radius: 12px;
-      padding: 16px;
-      margin-top: 16px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
-    }
-
+    .pay-now-chip-left,
     .reservation-chip-left {
       display: flex;
       flex-direction: row;
       align-items: center;
-      /* Centers the Timer SVG icon with the combined text group block */
       gap: 14px;
+      /* Matches bill-row-left gap */
     }
 
+    .pay-now-text-group,
     .reservation-text-group {
       display: flex;
       flex-direction: column;
-      /* Vertical text stack configuration */
-      gap: 3px;
+      gap: 2px;
     }
 
+    .pay-now-chip-label,
     .reservation-title {
-      font-size: 12px;
-      font-weight: 700;
-      color: #0f172a;
-      /* Dark theme success-text alignment */
-      line-height: 1.2;
+      font-size: 14px;
+      /* Matches bill-label exactly */
+      font-weight: 600;
+      color: var(--text-2);
+      display: flex;
+      align-items: center;
     }
 
+    .pay-now-chip-subtitle,
     .reservation-subtitle {
-      font-size: 12px;
-      font-weight: 400;
-      color: #475569;
-      /* Balanced slate description tone */
-      line-height: 1.2;
+      font-size: 11px;
+      /* Matches bill-row-sublabel exactly */
+      color: var(--text-m);
+      font-weight: 500;
+      line-height: 1.4;
     }
 
-    /* Keep or update your existing inner subtitle layout parameters cleanly */
-    .pay-now-chip-subtitle {
-      font-size: 13px;
-      color: #64748b;
+    /* Redesigned Trust Features Card (Premium & Globally Compliant) */
+    .trust-features-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 14px 16px;
+      margin-top: 16px;
+      /* Enforces the exact 16px gap matching image_000280.png */
+      gap: 12px;
+    }
+
+    .trust-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex: 1;
+    }
+
+    .trust-item svg {
+      color: #16a34a;
+      /* Premium crisp emerald trust green */
+      flex-shrink: 0;
+    }
+
+    .trust-item span {
+      font-size: 12px;
+      /* Matches standard bill breakdown label typography */
+      font-weight: 600;
+      color: var(--text-2);
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+
+    /* Seamless mobile responsiveness scaling */
+    @media (max-width: 480px) {
+      .trust-features-card {
+        padding: 12px 6px;
+        gap: 4px;
+      }
+
+      .trust-item {
+        gap: 4px;
+      }
+
+      .trust-item span {
+        font-size: 10px;
+      }
+
+      .trust-item svg {
+        width: 16px;
+        height: 16px;
+      }
     }
 
     /* Form fields */
@@ -1028,8 +1045,8 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
       <!-- Payment Breakdown -->
       <div id="sectionBill">
         <p class="section-label">Payment Breakdown</p>
-        <div class="bill-card">
 
+        <div class="bill-card">
           <div class="bill-row">
             <div class="bill-row-left">
               <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="none" overflow="visible">
@@ -1106,51 +1123,48 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
 
         <div class="pay-now-chip" id="payNowChip">
           <div class="pay-now-chip-left">
-            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="none" overflow="visible">
-              <g>
-                <path
-                  d="M 25 0 C 38.807 0 50 11.193 50 25 C 50 38.807 38.807 50 25 50 C 11.193 50 0 38.807 0 25 C 0 11.193 11.193 0 25 0 Z"
-                  fill="rgb(220, 243, 223)"></path>
-                <g transform="translate(16.071 13.571)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="none" overflow="visible">
+              <g fill="transparent">
+                <path d="M15 .484c8.284 0 15 6.607 15 14.758S23.284 30 15 30 0 23.393 0 15.242 6.716.484 15 .484" />
+                <g stroke="#2f9454" stroke-linecap="round">
                   <path
-                    d="M 0 2.857 C 0 2.857 2.411 2.857 4.643 2.143 C 6.875 1.429 8.929 0 8.929 0 C 8.929 0 11.339 1.451 13.571 2.143 C 15.804 2.835 17.5 2.857 17.5 2.857 L 17.5 15 C 17.5 15 15.714 17.232 13.571 18.929 C 11.429 20.625 8.929 21.786 8.929 21.786 C 8.929 21.786 6.518 20.625 4.286 18.929 C 2.054 17.232 0 15 0 15 Z"
-                    fill="transparent" stroke-width="3" stroke="rgb(47, 148, 84)" stroke-linecap="round"
-                    stroke-linejoin="round"></path>
-                  <path d="M 5.714 10 L 8.333 12.857 L 13.214 8.571" fill="transparent" stroke-width="2"
-                    stroke="rgb(47, 148, 84)" stroke-linecap="round"></path>
+                    d="M3 3.871s3.307 0 6.368-.968C12.429 1.936 15.245 0 15.245 0s3.306 1.966 6.367 2.903S27 3.871 27 3.871v16.451s-2.449 3.024-5.388 5.323c-2.938 2.298-6.367 3.871-6.367 3.871s-3.306-1.573-6.367-3.871S3 20.322 3 20.322Z"
+                    stroke-width="3" stroke-linejoin="round" />
+                  <path d="m10.836 13.548 3.592 3.871 6.694-5.807" stroke-width="2" stroke-miterlimit="10" />
                 </g>
               </g>
             </svg>
             <div class="pay-now-text-group">
               <span class="pay-now-chip-label">
-                <span id="payNowLabel" style="font-size: 18px;">Pay <span
-                    style="font-size: 20px; color: #2ca659;">₹<?= number_format($advance) ?>
-                  </span> to Confirm Order</span>
+                <span id="payNowLabel">Pay <span
+                    style="color: #2ca659; font-weight: 700;">₹<?= number_format($advance) ?></span> to Confirm
+                  Order</span>
               </span>
               <span class="pay-now-chip-subtitle" id="payNowSubtitle">Secure your order. Pay the remaining
-                ₹<?= number_format($onDel) ?> on delivery.
-              </span>
+                ₹<?= number_format($onDel) ?> on delivery.</span>
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="reservation-chip">
-        <div class="reservation-chip-left">
-          <svg xmlns="http://www.w3.org/2000/svg" width="26.471" height="30" fill="none" overflow="visible">
-            <path d="m19.412 23.75 2.132 2.132 4.265-4.264M12.353 11.471v5.735l3.529 3.529" fill="transparent"
-              stroke-width="3" stroke="#2f9454" stroke-linecap="round" />
-            <path
-              d="M13.235 3.529c7.31 0 13.236 5.926 13.236 13.236q-.001 1.065-.164 2.086a6.6 6.6 0 0 0-2.472-.308q.135-.833.136-1.705c0-5.888-4.774-10.662-10.662-10.662S2.647 10.95 2.647 16.838 7.42 27.5 13.309 27.5c1.6 0 3.118-.352 4.48-.984.174.83.504 1.602.958 2.285A13.2 13.2 0 0 1 13.235 30C5.926 30 0 24.074 0 16.765 0 9.455 5.926 3.529 13.235 3.529"
-              fill="#2f9454" />
-            <path d="M9.706 0h7.059" fill="transparent" stroke-width="3" stroke="#2f9454" stroke-linecap="round" />
-          </svg>
-          <div class="reservation-text-group">
-            <span class="reservation-title">Your pair is reserved for the next 30 minutes.</span>
-            <span class="reservation-subtitle">Next import shipment leaving soon. Order now to get yours in 8 - 10
-              days!</span>
+        <div class="reservation-chip">
+          <div class="reservation-chip-left">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="none" overflow="visible"
+              viewBox="0 0 26.471 30" style="flex-shrink:0;">
+              <path d="m19.412 23.75 2.132 2.132 4.265-4.264M12.353 11.471v5.735l3.529 3.529" fill="transparent"
+                stroke-width="3" stroke="#2f9454" stroke-linecap="round" />
+              <path
+                d="M13.235 3.529c7.31 0 13.236 5.926 13.236 13.236q-.001 1.065-.164 2.086a6.6 6.6 0 0 0-2.472-.308q.135-.833.136-1.705c0-5.888-4.774-10.662-10.662-10.662S2.647 10.95 2.647 16.838 7.42 27.5 13.309 27.5c1.6 0 3.118-.352 4.48-.984.174.83.504 1.602.958 2.285A13.2 13.2 0 0 1 13.235 30C5.926 30 0 24.074 0 16.765 0 9.455 5.926 3.529 13.235 3.529"
+                fill="#2f9454" />
+              <path d="M9.706 0h7.059" fill="transparent" stroke-width="3" stroke="#2f9454" stroke-linecap="round" />
+            </svg>
+            <div class="reservation-text-group">
+              <span class="reservation-title">Your pair is reserved for the next 30 minutes.</span>
+              <span class="reservation-subtitle">Next import shipment leaving soon. Order now to get yours in 8 - 10
+                days!</span>
+            </div>
           </div>
         </div>
+
       </div>
 
       <!-- QR + UPI -->
@@ -1187,23 +1201,107 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
           </div>
 
           <div
-            style="display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; border-top: 1px solid var(--border); background: var(--surface);">
-            <span style="font-size: 11px; font-weight: 800; letter-spacing: 0.08em; color: var(--text-2);">PAY
-              SECURELY</span>
-            <span
-              style="display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: var(--success);">
-              <svg xmlns="http://www.w3.org/2000/svg" width="12.049" height="15" fill="none" overflow="visible">
-                <g fill="transparent" stroke-width="2" stroke="#2f9454" stroke-linecap="round">
-                  <path
-                    d="M0 1.967s1.66 0 3.197-.492C4.734.984 6.148 0 6.148 0s1.659.999 3.196 1.475 2.705.492 2.705.492v8.361s-1.23 1.537-2.705 2.705S6.148 15 6.148 15s-1.66-.799-3.197-1.967S0 10.328 0 10.328Z"
-                    stroke-linejoin="round" />
-                  <path d="m3.934 6.885 1.803 1.967 3.361-2.951" stroke-miterlimit="10" />
-                </g>
+            style="display: flex; flex-direction: column; gap: 12px; padding: 12px 18px 16px; border-top: 1px solid var(--border); background: var(--surface);">
+
+            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+              <span style="font-size: 11px; font-weight: 800; letter-spacing: 0.08em; color: var(--text-2);">PAY
+                SECURELY VIA UPI</span>
+              <span
+                style="display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: var(--success);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12.049" height="15" fill="none" overflow="visible">
+                  <g fill="transparent" stroke-width="2" stroke="#2f9454" stroke-linecap="round">
+                    <path
+                      d="M0 1.967s1.66 0 3.197-.492C4.734.984 6.148 0 6.148 0s1.659.999 3.196 1.475 2.705.492 2.705.492v8.361s-1.23 1.537-2.705 2.705S6.148 15 6.148 15s-1.66-.799-3.197-1.967S0 10.328 0 10.328Z"
+                      stroke-linejoin="round" />
+                    <path d="m3.934 6.885 1.803 1.967 3.361-2.951" stroke-miterlimit="10" />
+                  </g>
+                </svg>
+                100% Secure Payment
+              </span>
+            </div>
+
+            <div
+              style="display: flex; justify-content: center; align-items: center; gap: 16px; margin-top: 4px; width: 100%; flex-wrap: wrap;">
+
+              <svg xmlns="http://www.w3.org/2000/svg" width="50.125" height="20" fill="none" overflow="visible">
+                <path
+                  d="M23.75 9.812v5.813h-1.875V1.25h4.875a4.65 4.65 0 0 1 3.187 1.25c.875.75 1.313 1.875 1.313 3.062 0 1.188-.438 2.25-1.313 3.063a4.54 4.54 0 0 1-3.187 1.25Zm0-6.812v5h3.125c.687 0 1.375-.25 1.812-.75 1-.938 1-2.5.063-3.438l-.063-.062c-.5-.5-1.125-.813-1.812-.75Zm11.812 2.5c1.375 0 2.438.375 3.25 1.125.813.75 1.188 1.75 1.188 3v6h-1.75V14.25h-.063c-.75 1.125-1.812 1.687-3.062 1.687-1.063 0-2-.312-2.75-.937-.688-.625-1.125-1.5-1.125-2.438q0-1.5 1.125-2.437c.75-.625 1.812-.875 3.062-.875 1.125 0 2 .187 2.688.625v-.438c0-.625-.25-1.25-.75-1.625a2.73 2.73 0 0 0-1.813-.687q-1.593 0-2.437 1.312l-1.625-1c1-1.312 2.312-1.937 4.062-1.937m-2.375 7.125c0 .5.25.937.625 1.187.438.313.938.5 1.438.5.75 0 1.5-.312 2.062-.875.625-.562.938-1.25.938-2-.563-.437-1.375-.687-2.438-.687q-1.125 0-1.875.562-.75.469-.75 1.313m16.938-6.812L43.937 20h-1.875l2.313-4.938-4.063-9.187h2l2.938 7.062h.062l2.875-7.062h1.938Z"
+                  fill="#5f6368" />
+                <path
+                  d="M16.062 8.562c0-.562-.062-1.125-.125-1.687H8.125v3.187h4.437c-.187 1-.75 1.938-1.625 2.5v2.063h2.688c1.562-1.438 2.437-3.563 2.437-6.063"
+                  fill="#4285f4" />
+                <path
+                  d="M8.312 16.687c2.25 0 4.125-.75 5.5-2l-2.687-2.062c-.75.5-1.688.812-2.813.812-2.125 0-4-1.437-4.625-3.437H.937v2.125c1.438 2.812 4.25 4.562 7.375 4.562"
+                  fill="#34a853" />
+                <path d="M3.641 10c-.375-1-.375-2.125 0-3.188V4.687H.891C-.297 7-.297 9.75.891 12.125Z"
+                  fill="#fbbc04" />
+                <path
+                  d="M8.25 3.253c1.187 0 2.312.438 3.187 1.25l2.375-2.375c-1.5-1.375-3.5-2.187-5.5-2.125-3.125 0-6 1.75-7.375 4.563l2.75 2.125c.563-2 2.438-3.438 4.563-3.438"
+                  fill="#ea4335" />
               </svg>
-              100% Secure Payment
-            </span>
+
+              <svg xmlns="http://www.w3.org/2000/svg" width="73.682" height="20" fill="none" overflow="visible">
+                <path
+                  d="M0 10C0 4.477 4.477 0 10 0s10 4.477 10 10-4.477 10-10 10S0 15.523 0 10m50.609 5.734v-3.632c0-.896-.335-1.343-1.169-1.343-.336 0-.721.049-.945.112v5.311c0 .161-.162.335-.336.335h-1.281c-.162 0-.336-.161-.336-.335V9.975c0-.224.162-.385.336-.448.833-.273 1.679-.447 2.575-.447 2.015 0 3.134 1.057 3.134 3.022v4.129c0 .162-.162.336-.336.336h-.783c-.523 0-.859-.385-.859-.833m5.025-2.177-.049.498c0 .671.447 1.057 1.169 1.057.559 0 1.057-.162 1.617-.448.049 0 .112-.05.161-.05.112 0 .162.05.224.112.05.05.162.224.162.224.112.162.224.386.224.56 0 .274-.162.56-.386.672-.609.335-1.343.497-2.127.497-.895 0-1.617-.224-2.176-.672a2.6 2.6 0 0 1-.896-2.014v-2.177c0-1.729 1.12-2.799 3.023-2.799 1.84 0 2.91 1.008 2.91 2.799v1.343c0 .162-.162.336-.336.336h-3.52Zm-.049-1.231h2.126v-.56c0-.671-.385-1.119-1.057-1.119s-1.057.385-1.057 1.119c-.012 0-.012.56-.012.56m14.241 1.231-.05.498c0 .671.448 1.057 1.169 1.057.56 0 1.057-.162 1.617-.448.05 0 .112-.05.162-.05.112 0 .162.05.224.112.05.05.161.224.161.224.112.162.224.386.224.56 0 .274-.161.56-.385.672-.61.335-1.344.497-2.127.497-.896 0-1.617-.224-2.177-.672a2.6 2.6 0 0 1-.895-2.014v-2.177c0-1.729 1.119-2.799 3.022-2.799 1.841 0 2.911 1.008 2.911 2.799v1.343c0 .162-.162.336-.336.336h-3.52Zm-.05-1.231h2.127v-.56c0-.671-.386-1.119-1.057-1.119-.672 0-1.057.385-1.057 1.119v.56Zm-32.861 4.241h.784c.162 0 .336-.162.336-.336v-4.129c0-1.903-1.008-3.022-2.687-3.022a5 5 0 0 0-1.393.223V7.239a.85.85 0 0 0-.833-.834h-.784c-.161 0-.336.162-.336.336v9.503c0 .161.162.336.336.336h1.281c.162 0 .336-.162.336-.336v-5.261c.274-.112.672-.162.945-.162.834 0 1.17.385 1.17 1.343v3.632c.062.386.398.771.845.771m8.433-4.689v2.065c0 1.729-1.169 2.798-3.134 2.798-1.903 0-3.134-1.057-3.134-2.798v-2.065c0-1.729 1.169-2.798 3.134-2.798s3.134 1.069 3.134 2.798m-1.952 0c0-.672-.386-1.119-1.12-1.119s-1.119.385-1.119 1.119v2.065c0 .671.385 1.057 1.119 1.057s1.12-.386 1.12-1.057Zm-12.463-.945c0 1.778-1.343 3.01-3.122 3.01-.448 0-.833-.05-1.231-.224v2.512c0 .162-.162.336-.336.336h-1.281c-.162 0-.336-.162-.336-.336v-8.88c0-.224.162-.386.336-.448.833-.274 1.679-.448 2.574-.448 2.015 0 3.408 1.232 3.408 3.135-.012 0-.012 1.343-.012 1.343M28.93 9.478c0-.896-.609-1.344-1.455-1.344-.497 0-.833.162-.833.162v3.694c.336.162.497.224.895.224.834 0 1.456-.498 1.456-1.343V9.478Zm38.11 1.455c0 1.791-1.343 3.022-3.135 3.022-.447 0-.833-.05-1.231-.224v2.513c0 .161-.162.336-.336.336h-1.281c-.161 0-.336-.162-.336-.336V7.351c0-.224.162-.386.336-.448.834-.274 1.679-.448 2.575-.448 2.015 0 3.408 1.232 3.408 3.135Zm-2.015-1.455c0-.896-.61-1.344-1.455-1.344-.498 0-.834.162-.834.162v3.694c.336.162.498.224.896.224.833 0 1.455-.498 1.455-1.343V9.478Z"
+                  fill="#5f259f" />
+                <path
+                  d="M14.515 7.418a.74.74 0 0 0-.721-.722H12.45l-3.072-3.52c-.274-.336-.721-.447-1.169-.336l-1.057.336c-.162.05-.224.274-.112.386l3.358 3.184H5.311a.26.26 0 0 0-.274.274v.559c0 .386.336.722.722.722h.783V11c0 2.015 1.058 3.184 2.849 3.184.559 0 1.007-.05 1.567-.274v1.791c0 .498.385.896.895.896h.784c.162 0 .336-.162.336-.336V8.276h1.281a.26.26 0 0 0 .273-.274c-.012-.025-.012-.584-.012-.584m-3.582 4.813c-.336.162-.784.224-1.12.224-.895 0-1.343-.448-1.343-1.455V8.313h2.463Z"
+                  fill="#fff" />
+              </svg>
+
+              <svg xmlns="http://www.w3.org/2000/svg" width="63.496" height="20" fill="none" overflow="visible">
+                <path
+                  d="M63.282 5.668a4.24 4.24 0 0 0-3.997-2.835h-.039a4.23 4.23 0 0 0-3.053 1.302 4.23 4.23 0 0 0-3.053-1.302h-.039a4.22 4.22 0 0 0-2.761 1.026v-.325a.626.626 0 0 0-.621-.578h-2.833a.627.627 0 0 0-.627.628v15.385a.63.63 0 0 0 .627.628h2.833a.624.624 0 0 0 .617-.541l-.001-11.045q0-.057.005-.111c.045-.493.406-.898.977-.949h.522c.218.017.427.097.599.232.248.202.39.507.383.828l.011 10.99c0 .348.281.629.627.629h2.833a.626.626 0 0 0 .622-.598l-.001-11.036a1.04 1.04 0 0 1 .461-.885c.145-.093.32-.156.521-.174h.522c.561.028.996.498.983 1.059l.01 10.976a.627.627 0 0 0 .627.628h2.833c.345 0 .626-.28.626-.628V7.167c0-.805-.09-1.147-.214-1.499M44.306 3.203h-1.621V.57a.57.57 0 0 0-.679-.56c-1.797.493-1.437 2.981-4.717 3.193h-.318a.7.7 0 0 0-.138.016h-.002l.002.001a.63.63 0 0 0-.49.609v2.834a.624.624 0 0 0 .628.626h1.71l-.003 12.014c0 .343.277.62.62.62h2.801a.62.62 0 0 0 .618-.62l.002-12.014h1.587c.346 0 .626-.28.626-.626V3.829a.626.626 0 0 0-.626-.626"
+                  fill="#54c1f0" />
+                <path
+                  d="M34.135 3.305h-2.833a.627.627 0 0 0-.625.627V9.79a.666.666 0 0 1-.664.653h-1.186a.666.666 0 0 1-.665-.663l-.01-5.848a.627.627 0 0 0-.627-.627h-2.833a.627.627 0 0 0-.626.627v6.421c0 2.438 1.739 4.178 4.179 4.178 0 0 1.831 0 1.887.01a.66.66 0 0 1 .009 1.31l-.048.01-4.143.014a.627.627 0 0 0-.626.627v2.832c0 .346.28.626.626.626h4.632c2.442 0 4.18-1.738 4.18-4.178V3.932a.627.627 0 0 0-.627-.627M6.558 8.555v1.748a.666.666 0 0 1-.664.665l-1.797.002V7.466h1.797a.664.664 0 0 1 .664.664Zm.249-5.192H.614A.61.61 0 0 0 0 3.977v2.776l.001.016L0 6.808v12.564c0 .341.256.62.573.628H3.46c.345 0 .626-.28.626-.626l.011-4.306h2.71c2.269 0 3.849-1.574 3.849-3.852V7.22c0-2.278-1.58-3.857-3.849-3.857m11.427 11.84v.443a.7.7 0 0 1-.037.195.67.67 0 0 1-.631.428h-1.179c-.368 0-.668-.28-.668-.623v-.535l-.001-.02.001-1.422v-.445l.002-.004c.001-.342.298-.62.666-.62h1.179c.369 0 .668.279.668.624Zm-.45-11.827h-3.932c-.348 0-.629.263-.629.587v1.102l.001.022-.001.024v1.51c0 .342.299.622.666.622h3.744a.654.654 0 0 1 .564.6v.365c-.034.321-.266.556-.548.582h-1.854c-2.465 0-4.222 1.638-4.222 3.938v3.295c0 2.287 1.51 3.914 3.958 3.914h5.138c.922 0 1.67-.699 1.67-1.558V7.628c0-2.607-1.344-4.252-4.555-4.252"
+                  fill="#233266" />
+              </svg>
+
+              <svg xmlns="http://www.w3.org/2000/svg" width="81.088" height="20" fill="none" overflow="visible">
+                <path d="m77.116 0 3.972 7.903-8.354 7.902Z" fill="#008c44" />
+                <path d="m74.34 0 3.97 7.903-8.359 7.902Z" fill="#f47920" />
+                <path
+                  d="M17.831 11.425a2.14 2.14 0 0 1-1.657 1.201H4.952l.903-3.231h11.331c.413.102.735.427.832.842q.024.214.01.429v.061ZM7.616 3.071h11.356c.307.075.57.275.724.552.086.3.106.615.058.924l-.028.103-.111.396c-.301.7-.95 1.187-1.705 1.281H6.71Zm11.83 12.173c.373-.276.643-.668.769-1.115l1.322-4.734q.182-.646-.157-1.085c-.338-.439-.559-.439-.998-.439a2 2 0 0 0 1.246-.449c.369-.27.639-.655.766-1.095l1.317-4.729q.195-.689-.128-1.14-.32-.454-1.009-.454H5.341L.962 15.696H18.2q.658 0 1.246-.449M41.769.019 40.036 6.32H27.601L29.334.019h-3.09L21.94 15.653h3.093l1.728-6.273h12.433l-1.726 6.273h3.093l4.3-15.634Zm3.99 15.684h-3.112L46.975.072h3.113ZM71.733.059 58.818 11.004 54.31 3.515 52.232.059h-.058l-.979 3.552-3.322 12.032h3.093l2.328-8.433 4.931 8.455 8.168-7.484-2.046 7.462h3.092l3.017-10.937L71.74.059Z"
+                  fill="#6d6e71" />
+                <path
+                  d="M.714 18.572h.151q.286 0 .421-.075a.35.35 0 0 0 .177-.245q.045-.189-.045-.267-.091-.076-.394-.076H.873Zm-.247 1.019h.136q.159.003.318-.015a.5.5 0 0 0 .176-.058.45.45 0 0 0 .227-.292.35.35 0 0 0-.005-.195.26.26 0 0 0-.108-.126.5.5 0 0 0-.121-.04l-.19-.013H.643ZM0 19.904l.555-2.313h.618q.263 0 .383.028a.5.5 0 0 1 .195.088q.095.077.126.207a.69.69 0 0 1-.169.593.67.67 0 0 1-.303.171.4.4 0 0 1 .293.184q.088.152.03.386a.83.83 0 0 1-.595.618q-.254.045-.51.038Zm3.014.003.555-2.313h.396l-.204.855h1.203l.204-.855h.401l-.554 2.313h-.399l.27-1.123H3.68l-.27 1.123Zm4.331-.908h.684l-.126-.53a1.2 1.2 0 0 1-.028-.26l-.076.141-.075.121Zm.883.908-.134-.596h-.968l-.429.596h-.416l1.763-2.404.608 2.404Zm2.404-1.327h.071c.148.01.297-.014.436-.068a.38.38 0 0 0 .164-.247q.045-.19-.048-.27-.091-.076-.394-.076h-.07Zm-.096.292-.247 1.035h-.373l.554-2.308h.555q.245 0 .371.027a.5.5 0 0 1 .207.101.4.4 0 0 1 .124.215.8.8 0 0 1-.253.726.83.83 0 0 1-.466.189l.592 1.052h-.451l-.568-1.034Zm3.067.127h.684l-.126-.53-.015-.114-.013-.146-.076.141-.075.121Zm.883.908-.134-.596h-.971l-.426.596h-.419l1.763-2.404.608 2.404Zm2.77-1.993-.48 1.993h-.393l.477-1.993h-.654l.076-.32h1.698l-.076.32Zm3.584 1.993.555-2.313h.396l-.552 2.313Zm2.005 0 .575-2.404 1.219 1.412q.11.135.199.283l.383-1.604h.369l-.575 2.403-1.244-1.437a1.3 1.3 0 0 1-.174-.26l-.386 1.607Zm5.058-1.993-.48 1.993h-.396l.48-1.993h-.656l.078-.32h1.698l-.076.32Zm1.511 1.993.552-2.313h1.367l-.075.32h-.972l-.138.58h.968l-.075.328h-.972l-.179.749h.969l-.081.336Zm3.574-1.327h.07c.149.01.298-.014.437-.068a.38.38 0 0 0 .164-.247q.045-.19-.048-.27-.091-.076-.394-.076h-.07Zm-.096.292-.247 1.035h-.373l.554-2.311h.555q.242 0 .371.028a.5.5 0 0 1 .207.101.4.4 0 0 1 .124.214.81.81 0 0 1-.253.727.84.84 0 0 1-.466.189l.59 1.052h-.449l-.568-1.035Zm2.333 1.035.555-2.313h1.365l-.076.32H36.1l-.138.575h.971l-.081.331h-.968l-.26 1.087Zm3.446-.908h.681l-.121-.53a1.3 1.3 0 0 1-.03-.26q-.068.136-.152.262Zm.883.908-.134-.596h-.971l-.426.596h-.419l1.76-2.404.611 2.404Zm4.013-1.751a1 1 0 0 0-.31-.202 1.11 1.11 0 0 0-1.093.177 1.1 1.1 0 0 0-.401.631q-.089.37.099.615c.186.245.31.245.56.245q.216 0 .428-.076.232-.08.432-.219l-.101.428c-.399.23-.877.276-1.312.126a.86.86 0 0 1-.54-.645 1.3 1.3 0 0 1 .021-.48q.063-.257.209-.479.151-.222.373-.393c.222-.172.311-.197.48-.258q.258-.084.532-.088.216 0 .398.061.184.057.336.179Zm1.11 1.751.552-2.313h1.367l-.075.32h-.972l-.136.58h.969l-.081.328h-.969l-.176.749h.968l-.083.336Zm4.926 0 .555-2.313h1.367l-.076.32h-.971l-.139.575h.972l-.081.331h-.969l-.26 1.087Zm5.206-1.151a.8.8 0 0 0 .013-.332.66.66 0 0 0-.371-.47.8.8 0 0 0-.328-.065 1.16 1.16 0 0 0-.694.252 1.3 1.3 0 0 0-.262.28 1 1 0 0 0-.146.335.8.8 0 0 0-.013.331.63.63 0 0 0 .371.467c.103.046.215.07.328.068a1 1 0 0 0 .358-.068c.36-.133.637-.429.744-.798m.416 0c-.038.168-.11.326-.212.465a1.84 1.84 0 0 1-.867.655 1.5 1.5 0 0 1-.52.094 1.3 1.3 0 0 1-.484-.094 1 1 0 0 1-.361-.262.9.9 0 0 1-.192-.391 1 1 0 0 1 .016-.467q.064-.252.209-.469a1.75 1.75 0 0 1 .868-.656q.257-.087.524-.088c.268 0 .336.028.48.088a.91.91 0 0 1 .552.659q.045.222-.013.466m1.932-.176h.071c.149.01.298-.014.436-.068a.38.38 0 0 0 .164-.247q.046-.19-.048-.27-.093-.076-.393-.076h-.073Zm-.095.292-.248 1.035h-.373l.552-2.308h.555q.242 0 .371.027a.5.5 0 0 1 .207.101.4.4 0 0 1 .124.215.83.83 0 0 1-.253.726.83.83 0 0 1-.466.189l.59 1.052h-.449l-.568-1.034Zm6.674-.108.012-.149.018-.166a1.3 1.3 0 0 1-.189.32L62.644 20l-.343-1.256a1.2 1.2 0 0 1-.051-.295 1.2 1.2 0 0 1-.121.32l-.535 1.138h-.365l1.155-2.412.373 1.463.025.114.033.199q.058-.1.172-.252l.045-.063 1.054-1.461.016 2.412h-.369Zm4.091-.008a.8.8 0 0 0 .013-.332.66.66 0 0 0-.371-.47.8.8 0 0 0-.328-.065 1.16 1.16 0 0 0-.696.252 1.16 1.16 0 0 0-.406.615.8.8 0 0 0-.013.331.62.62 0 0 0 .373.467c.103.046.215.07.328.068q.185-.002.356-.068c.36-.133.637-.429.744-.798m.416 0c-.038.168-.11.326-.212.465a1.76 1.76 0 0 1-1.387.749c-.165 0-.329-.031-.482-.094a.94.94 0 0 1-.555-.653 1 1 0 0 1 .016-.467q.06-.247.209-.469c.151-.222.227-.277.378-.393q.23-.172.49-.263c.259-.09.348-.088.524-.088q.265-.001.48.088a.91.91 0 0 1 .552.659q.045.222-.013.466m1.216 1.151.575-2.404 1.219 1.412q.108.135.196.283l.386-1.604h.369l-.576 2.403-1.243-1.437a1.2 1.2 0 0 1-.177-.26l-.383 1.607Zm3.789 0 .555-2.313h1.364l-.075.32h-.971l-.139.58h.971l-.081.328h-.968l-.177.749h.966l-.078.336Zm3.385 0 .252-1.06-.525-1.253h.419l.328.784.025.081.031.106q.065-.107.151-.197l.711-.774h.399l-1.143 1.256-.252 1.059Z"
+                  fill="#414042" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="trust-features-card">
+          <div class="trust-item">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              <path d="m9 11 2 2 4-4"></path>
+            </svg>
+            <span>Best Quality Assured</span>
           </div>
 
+          <div class="trust-item">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="1" y="3" width="15" height="13"></rect>
+              <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+              <circle cx="5.5" cy="18.5" r="2.5"></circle>
+              <circle cx="18.5" cy="18.5" r="2.5"></circle>
+            </svg>
+            <span>Delivery Across India</span>
+          </div>
+
+          <div class="trust-item">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="23 4 23 10 17 10"></polyline>
+              <polyline points="1 20 1 14 7 14"></polyline>
+              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+            </svg>
+            <span>Easy Returns/Exchange</span>
+          </div>
         </div>
       </div>
 
@@ -1366,8 +1464,8 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
         document.getElementById('onDelRow').style.display = 'none';
         document.getElementById('totalAmt').textContent = fmt(TOTAL);
 
-        // Use innerHTML to preserve the green styled span
-        labelEl.innerHTML = 'Pay <span style="font-size: 20px; color: #2ca659;">' + fmt(TOTAL) + '</span> to Confirm Order';
+        // Standardized font sizes to ensure perfect alignment with billing elements on mobile devices
+        labelEl.innerHTML = 'Pay <span style="color: #2ca659; font-weight: 700;">' + fmt(TOTAL) + '</span> to Confirm Order';
         if (subEl) {
           subEl.textContent = 'Secure your order. Pay ' + fmt(TOTAL) + ' now to confirm your order.';
         }
@@ -1378,10 +1476,9 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
         document.getElementById('onDelAmt').textContent = fmt(ON_DEL);
         document.getElementById('totalAmt').textContent = fmt(TOTAL);
 
-        // Restore default state with advance amount
-        labelEl.innerHTML = 'Pay <span style="font-size: 20px; color: #2ca659;">' + fmt(ADVANCE) + '</span> to Confirm Order';
+        // Standardized font sizes for advance mode layout state
+        labelEl.innerHTML = 'Pay <span style="color: #2ca659; font-weight: 700;">' + fmt(ADVANCE) + '</span> to Confirm Order';
         if (subEl) {
-          // Evaluates the total delivery calculation directly inside JS
           subEl.textContent = 'Secure your order. Pay the remaining ' + fmt(ON_DEL) + ' on delivery.';
         }
       }
