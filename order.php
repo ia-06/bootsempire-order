@@ -1347,25 +1347,6 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
       </div>
 
     </div>
-    <div class="delivery-screen" id="deliveryScreen">
-      <div class="delivery-icon">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-          stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"></circle>
-          <polyline points="12 6 12 12 16 14"></polyline>
-        </svg>
-      </div>
-      <div>
-        <h2 class="delivery-title">Delivery Timeline</h2>
-        <p class="delivery-sub">Please note that the estimated delivery time for all custom boots is between
-          <strong>8 - 10 days</strong>. By proceeding, you acknowledge and agree to this timeline.
-        </p>
-      </div>
-      <div class="delivery-actions">
-        <button class="btn-primary" id="confirmOrderBtn" onclick="processOrder()">I agree - Continue</button>
-        <button class="btn-secondary" onclick="cancelDeliveryPrompt()">Cancel</button>
-      </div>
-    </div>
 
     <div class="success-screen" id="successScreen">
       <div class="success-icon" aria-hidden="true">
@@ -1560,27 +1541,14 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
     function submitOrder() {
       var name = document.getElementById('custName').value.trim();
       var wa = document.getElementById('custWa').value.trim();
-      if (!name || !wa) { showErr('Please fill in your name and WhatsApp number.'); return; }
+
+      if (!name || !wa) {
+        showErr('Please fill in your name and WhatsApp number.');
+        return;
+      }
       hideErr();
 
-      // Hide form, show delivery timeline prompt
-      document.getElementById('formContent').style.display = 'none';
-      document.getElementById('deliveryScreen').classList.add('on');
-      window.scrollTo(0, 0);
-    }
-
-    function cancelDeliveryPrompt() {
-      // Hide delivery prompt, return to form
-      document.getElementById('deliveryScreen').classList.remove('on');
-      document.getElementById('formContent').style.display = 'flex';
-      window.scrollTo(0, 0);
-    }
-
-    function processOrder() {
-      var name = document.getElementById('custName').value.trim();
-      var wa = document.getElementById('custWa').value.trim();
-
-      var btn = document.getElementById('confirmOrderBtn');
+      var btn = document.getElementById('submitBtn');
       btn.disabled = true;
       btn.textContent = 'Placing order\u2026';
 
@@ -1594,26 +1562,24 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
         .then(function (r) { return r.json(); })
         .then(function (d) {
           if (d.ok) {
-            document.getElementById('deliveryScreen').classList.remove('on');
+            // Direct to Success Screen immediately on DB confirmation
             showSuccess();
           } else {
-            cancelDeliveryPrompt();
             showErr(d.error || 'Something went wrong. Please try again.');
             btn.disabled = false;
-            btn.textContent = 'I agree - Continue';
+            btn.textContent = 'Place Order';
           }
         })
         .catch(function () {
-          cancelDeliveryPrompt();
           showErr('Network error. Please check your connection and try again.');
           btn.disabled = false;
-          btn.textContent = 'I agree - Continue';
+          btn.textContent = 'Place Order';
         });
     }
 
     function showSuccess() {
       document.getElementById('formContent').style.display = 'none';
-      document.getElementById('deliveryScreen').classList.remove('on');
+      // Removed the delivery screen toggle since it no longer exists
       document.getElementById('successScreen').classList.add('on');
       window.scrollTo(0, 0);
     }
