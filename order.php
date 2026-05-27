@@ -362,6 +362,11 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
       line-height: 1.4;
     }
 
+    .reservation-chip {
+      background-color: #ffcece;
+      border-color: #ff7f7f;
+    }
+
     /* Redesigned Trust Features Card (Stacked Text & Responsive) */
     .trust-features-card {
       display: flex;
@@ -1141,14 +1146,14 @@ $slugSafe = htmlspecialchars($slug, ENT_QUOTES);
             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="none" overflow="visible"
               viewBox="0 0 26.471 30" style="flex-shrink:0;">
               <path d="m19.412 23.75 2.132 2.132 4.265-4.264M12.353 11.471v5.735l3.529 3.529" fill="transparent"
-                stroke-width="3" stroke="#2f9454" stroke-linecap="round" />
+                stroke-width="3" stroke="#ff6868" stroke-linecap="round" />
               <path
                 d="M13.235 3.529c7.31 0 13.236 5.926 13.236 13.236q-.001 1.065-.164 2.086a6.6 6.6 0 0 0-2.472-.308q.135-.833.136-1.705c0-5.888-4.774-10.662-10.662-10.662S2.647 10.95 2.647 16.838 7.42 27.5 13.309 27.5c1.6 0 3.118-.352 4.48-.984.174.83.504 1.602.958 2.285A13.2 13.2 0 0 1 13.235 30C5.926 30 0 24.074 0 16.765 0 9.455 5.926 3.529 13.235 3.529"
-                fill="#2f9454" />
-              <path d="M9.706 0h7.059" fill="transparent" stroke-width="3" stroke="#2f9454" stroke-linecap="round" />
+                fill="#ff6868" />
+              <path d="M9.706 0h7.059" fill="transparent" stroke-width="3" stroke="#ff6868" stroke-linecap="round" />
             </svg>
             <div class="reservation-text-group">
-              <span class="reservation-title">Your pair is reserved for the next 30 minutes.</span>
+              <span class="reservation-title">Your order can be delivered faster.</span>
               <span class="reservation-subtitle">Next import shipment leaving soon. Order now to get yours in 8 - 10
                 days!</span>
             </div>
